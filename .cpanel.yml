@@ -2,10 +2,4 @@
 deployment:
 tasks:
 - export DEPLOYPATH=/home/saktiyasin/public_html/sitarung/git
-- /bin/cp -r .vscode $DEPLOYPATH
-- /bin/cp -r assets $DEPLOYPATH
-- /bin/cp -r css $DEPLOYPATH
-- /bin/cp -r fonts $DEPLOYPATH
-- /bin/cp -r img $DEPLOYPATH
-- /bin/cp -r js $DEPLOYPATH
-/bin/cp index.html $DEPLOYPATH
+- /bin/cp -R ./ $DEPLOYPATH

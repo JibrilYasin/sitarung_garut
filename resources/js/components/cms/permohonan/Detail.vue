@@ -40,12 +40,12 @@
           maxZoom: 20,
           subdomains: ["mt0", "mt1", "mt2", "mt3"],
         }),
-        gSatelliteMap: L.tileLayer("http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
-          attribution: '&copy; <a href="http://maps.google.com">GoogleMap</a> Contributors',
+        gSatelliteMap: L.tileLayer("https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+          attribution: '&copy; <a href="https://maps.google.com">GoogleMap</a> Contributors',
           maxZoom: 20,
           subdomains: ["mt0", "mt1", "mt2", "mt3"],
         }),
-        googleHybrid: L.tileLayer("http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+        googleHybrid: L.tileLayer("https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
           maxZoom: 20,
           subdomains: ["mt0", "mt1", "mt2", "mt3"],
         }),

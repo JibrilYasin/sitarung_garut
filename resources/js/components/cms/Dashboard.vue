@@ -166,7 +166,7 @@
             maxZoom: 20,
             attribution: '© OpenStreetMap'
         }),
-        gStreet:L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        gStreet:L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
             maxZoom: 20,
             subdomains:['mt0','mt1','mt2','mt3']
         }),
@@ -180,15 +180,15 @@
         //   maxZoom: 20,
         // }),
         grayscaleMap:L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
           maxZoom: 20,
         }),
-        gSatelliteMap:L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-          attribution: '&copy; <a href="http://maps.google.com">GoogleMap</a> Contributors',
+        gSatelliteMap:L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+          attribution: '&copy; <a href="https://maps.google.com">GoogleMap</a> Contributors',
           maxZoom: 20,
           subdomains:['mt0','mt1','mt2','mt3']
         }),
-        googleHybrid:L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+        googleHybrid:L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
             maxZoom: 20,
             subdomains:['mt0','mt1','mt2','mt3']
         }),

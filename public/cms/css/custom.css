@@ -1,0 +1,38 @@
+.btn{
+  margin-bottom: 0px !important
+}
+.datepicker {
+    padding: 4px !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+    direction: ltr !important;
+}
+.datepicker td, .datepicker th {
+    padding: 10px;
+}
+.ct-docs-sidenav-pro-badge {
+  text-transform: uppercase;
+  float: right !important;
+  color: #d31a98;
+  background-color: #eaecfb;
+  font-size: 66%;
+  font-weight: 600;
+  line-height: 1;
+  display: inline-block;
+  padding: .35rem .375rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  text-align: center;
+  vertical-align: baseline;
+  white-space: nowrap;
+  border-radius: 6px;
+}
+.navbar .nav-link {
+  font-size: 0.8rem !important;
+}
+p, .p {
+  font-size: .8rem;
+}
+.invalid-feedback {
+  font-size: 0.675em !important;
+}

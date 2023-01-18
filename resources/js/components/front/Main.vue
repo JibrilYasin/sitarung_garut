@@ -60,7 +60,7 @@
               <div class="col-xs-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
                 <div class="page-title home text-center">
                   <div>
-                    <img :src="imagepath+'/'+setCompany['company_logo']" width="170" />
+                    <img :src="baseurl+'/images'+setCompany.company_logo" width="170" />
                   </div>
                   <span class="heading-page"> {{ setCompany['company_appname'] }} </span>
                   <p class="mt20 text-uppercase">{{ setCompany['company_name'] }}</p>

@@ -9,7 +9,7 @@
       <ul>
         <li v-if="!$store.state.sideMenu" @click="showLoginModal">
           <i class="bx bx-log-in-circle"></i>
-          <span class="tooltip-sidebar">Login</span>
+          <span class="tooltip-sidebar">Logins</span>
         </li>
         <li v-if="!$store.state.sideMenu" @click="showRegisterModal">
           <i class="bx bx-user-plus"></i>

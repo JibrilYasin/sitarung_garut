@@ -2452,7 +2452,7 @@ var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 }, null, -1 /* HOISTED */);
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "tooltip-sidebar"
-}, "Login", -1 /* HOISTED */);
+}, "Logins", -1 /* HOISTED */);
 var _hoisted_8 = [_hoisted_6, _hoisted_7];
 var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "bx bx-user-plus"

@@ -274,7 +274,7 @@
               this.map.remove();
             }
             this.map = new L.Map("distmap", {
-              layers: [this.$parent.googleHybrid],
+              layers: [this.$parent.gStreet],
             }).setView(response.data['features'][0]['properties']['center_point'], 11);
 
             if (this.nameKec == "") {

@@ -135,7 +135,7 @@
               this.map.remove();
             }
             this.map = new L.Map("authmap", {
-              layers: [this.$parent.grayscaleMap],
+              layers: [this.$parent.gStreet],
             }).setView(response.data['features'][0]['properties']['center_point'], 11);
 
             var myStyle = {

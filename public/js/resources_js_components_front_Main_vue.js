@@ -85,8 +85,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
       }),
       grayscaleMap: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 20
       }),
       // grayscaleMap:L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
       //   attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
@@ -154,7 +154,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 }).then(function (response) {
                   var self = _this;
                   var map = new L.Map('defmap', {
-                    layers: [_this.gStreet],
+                    layers: [_this.googleHybrid],
                     center: _this.center,
                     zoom: 10
                   });
@@ -1229,7 +1229,7 @@ __webpack_require__.r(__webpack_exports__);
           _this.detailMapPermohonan.remove();
         }
         _this.detailMapPermohonan = new L.Map("detailMap", {
-          layers: [_this.$parent.googleHybrid],
+          layers: [_this.$parent.gStreet],
           zoom: 10
         }).setView(_this.$parent.center, 10);
         var myStyle = {
@@ -1441,7 +1441,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.map.remove();
         }
         _this3.map = new L.Map("distmap", {
-          layers: [_this3.$parent.googleHybrid]
+          layers: [_this3.$parent.gStreet]
         }).setView(response.data['features'][0]['properties']['center_point'], 11);
         if (_this3.nameKec == "") {
           _this3.$isLoading(false);
@@ -1987,7 +1987,7 @@ __webpack_require__.r(__webpack_exports__);
           _this4.map.remove();
         }
         _this4.map = new L.Map("authmap", {
-          layers: [_this4.$parent.grayscaleMap]
+          layers: [_this4.$parent.gStreet]
         }).setView(response.data['features'][0]['properties']['center_point'], 11);
         var myStyle = {
           color: "#F00",

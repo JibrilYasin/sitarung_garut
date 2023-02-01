@@ -149,7 +149,7 @@
               this.detailMapPermohonan.remove();
             }
             this.detailMapPermohonan = new L.Map("detailMap", {
-              layers: [this.$parent.googleHybrid],
+              layers: [this.$parent.gStreet],
               zoom: 10,
             }).setView(this.$parent.center, 10);
 

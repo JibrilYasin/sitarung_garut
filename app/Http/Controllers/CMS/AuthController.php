@@ -22,12 +22,6 @@ class AuthController extends Controller
       ];
       return response()->json($response, 422);
     }else{
-      $response = [
-        'status' => 'warning',
-        'message' => 'Maaf akun anda ditangguhkan, silahkan hubungi Contact Center.',
-      ];
-      return response()->json($response, 200);
-      
       $credentials = ['email'=>$request->emailCMSLoginInput, 'password'=>$request->passwordCMSLoginInput];
       $credentials = \Arr::add($credentials, 'user_access', 'CMS');
       if (!\Auth::attempt($credentials)) {
@@ -37,21 +31,22 @@ class AuthController extends Controller
         ];
       }else{
         $user = \App\Models\User::where('email', $request->emailCMSLoginInput)->first();
-        if($user['user_block'] == 'T'){
-          $response = [
-            'status' => 'warning',
-            'message' => 'Maaf akun anda ditangguhkan, silahkan hubungi Contact Center.',
-          ];
-        }else{
-          $tokenResult = $user->createToken('token-auth')->plainTextToken;
-          $response = [
-            'status' => 'success',
-            'message' => 'Proses login berhasil.',
-            'content' => [
-              'access_token' => $tokenResult
-            ],
-          ];
-        }
+        $tokenResult = $user->createToken('token-auth')->plainTextToken;
+        $response = [
+          'status' => 'success',
+          'message' => 'Proses login berhasil.',
+          'content' => [
+            'access_token' => $tokenResult
+          ],
+        ];
+        // if($user['user_block'] == 'T'){
+        //   $response = [
+        //     'status' => 'warning',
+        //     'message' => 'Maaf akun anda ditangguhkan, silahkan hubungi Contact Center.',
+        //   ];
+        // }else{
+        //
+        // }
       }
       return response()->json($response, 200);
     }

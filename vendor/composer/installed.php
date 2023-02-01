@@ -178,6 +178,24 @@
       ),
       'reference' => '783a74f5e3431d7b9805be8afb60fd0a8f743534',
     ),
+    'geo-io/interface' => 
+    array (
+      'pretty_version' => 'v1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'cf46fe7b013de20ab8b601238c7d91b480810644',
+    ),
+    'geo-io/wkb-parser' => 
+    array (
+      'pretty_version' => 'v1.0.2',
+      'version' => '1.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd6c3101e6fa255c2a5064fedb33551c4d50e58f6',
+    ),
     'graham-campbell/result-type' => 
     array (
       'pretty_version' => 'v1.1.0',
@@ -186,6 +204,15 @@
       array (
       ),
       'reference' => 'a878d45c1914464426dc94da61c9e1d36ae262a8',
+    ),
+    'grimzy/laravel-mysql-spatial' => 
+    array (
+      'pretty_version' => '4.0.0',
+      'version' => '4.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f70a82e528c579b63f6fa16cebe069a668cb3e6b',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -448,6 +475,15 @@
       array (
       ),
       'reference' => '04be355f8d6734c826045d02a1079ad658322dad',
+    ),
+    'jmikola/geojson' => 
+    array (
+      'pretty_version' => '1.1.1',
+      'version' => '1.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8a0c5a88098bc70d05a4cb491ed77303ce9ff075',
     ),
     'kodova/hamcrest-php' => 
     array (

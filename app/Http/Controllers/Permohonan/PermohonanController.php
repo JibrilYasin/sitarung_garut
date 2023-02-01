@@ -226,12 +226,57 @@ class PermohonanController extends Controller
     $path = $mainpath . $subpath;
 
     $phpWord = new \PhpOffice\PhpWord\PhpWord();
-    $section = $phpWord->addSection(['marginLeft' => 200, 'marginRight' => 200,'marginTop' => 200, 'marginBottom' => 200]);
-    $data['name'] = "Sakti Yasin";
+    $section = $phpWord->addSection();
+    $data['permohonan'] = $this->polImpact()['permohonan'];
+    $data['polaruang'] = $this->polImpact()['polaruang'];
+    $data['sawah'] = $this->polImpact()['sawah'];
     \PhpOffice\PhpWord\Shared\Html::addHtml($section,\View::make('docs.statuspermohonan',$data)->render() , false, false);
 
     $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-    $objWriter->save($path.'Appdividend.docx');
-    return view('docs.statuspermohonan');
+    $objWriter->save($path.$data['permohonan']['invoice'].'.docx');
+    return view('docs.statuspermohonan',$data);
+  }
+  public function polImpact(){
+    $query = \App\Models\Permohonan::select(
+      'permohonan.id',
+      'permohonan.invoice',
+      'permohonan.peruntukan',
+      'permohonan.alamat_lahan',
+      'permohonan.luas_lahan_rencana',
+      'permohonan.coordinates',
+      'permohonan.created_at',
+      'users.name',
+      \DB::raw("(ST_AsGeoJSON(ogc_geom)) as geom_json")
+    )
+    ->leftJoin('users','permohonan.user_id','users.id')
+    ->where('permohonan.id',3)
+    ->first();
+    $json = json_decode($query->geom_json);
+    $data = $json->coordinates[0];
+    $datacor = [];
+    foreach($data as $v){
+      $datacor[]=$v[0].' '.$v[1];
+    }
+    $datacor = implode(',', $datacor);
+    //return $datacor;
+
+    $polygon="POLYGON((".$datacor."))";
+    $where = "ST_Intersects((ST_GeomFromText('".$polygon."')), ogc_geom)";
+    // $where .= "AND KECAMATAN = '" . $kecamatan . "'";
+    // $where .= "AND DESA = '" . $desa . "'";
+    $polaruang = \DB::select("SELECT KELAS_III,luas FROM pola_ruang as pl WHERE {$where}");
+    $valuepolaruang = [];
+    foreach ($polaruang as $key => $v) {
+      $kupz = \App\Models\KUPZ::where('nama_obj',$v->KELAS_III)->first();
+      $valuepolaruang[]=['keterangan'=>$v->KELAS_III,'luas'=>$v->luas,'kupz_title'=>$kupz['title'],'kupz_description'=>$kupz['description']];
+    }
+
+    $sawah = \DB::select("SELECT LSD,KESIMPULAN,LUAS FROM lsd as sawah WHERE {$where}");
+    $valuesawah = [];
+    foreach ($sawah as $key => $v) {
+      $valuesawah[]=['lsd'=>$v->LSD,'kesimpulan'=>$v->KESIMPULAN,'luas'=>$v->LUAS];
+    }
+
+    return ['permohonan'=>$query,'polaruang'=>$valuepolaruang,'sawah'=>$valuesawah];
   }
 }

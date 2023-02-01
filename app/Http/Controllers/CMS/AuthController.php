@@ -22,6 +22,12 @@ class AuthController extends Controller
       ];
       return response()->json($response, 422);
     }else{
+      $response = [
+        'status' => 'warning',
+        'message' => 'Maaf akun anda ditangguhkan, silahkan hubungi Contact Center.',
+      ];
+      return response()->json($response, 200);
+      
       $credentials = ['email'=>$request->emailCMSLoginInput, 'password'=>$request->passwordCMSLoginInput];
       $credentials = \Arr::add($credentials, 'user_access', 'CMS');
       if (!\Auth::attempt($credentials)) {

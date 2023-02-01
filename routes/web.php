@@ -44,6 +44,7 @@ Route::get('/admin/permohonan/detail/{id?}', function () {
 
 Route::get('/genpdf', 'Permohonan\PermohonanController@generatePDF');
 Route::get('/gendocs', 'Permohonan\PermohonanController@generateDocs');
+Route::get('/polimpact', 'Permohonan\PermohonanController@polImpact');
 
 Route::get('{any}', function () {
   return view('welcome');

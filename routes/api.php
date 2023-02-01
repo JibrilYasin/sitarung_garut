@@ -37,6 +37,15 @@ Route::group(['prefix'=>'permohonan'],function () {
   Route::post('/listdesa','Permohonan\DesaController@postListDesa');
 });
 
+// Pengaduan
+Route::resource('pengaduan', 'PengaduanController')->except([
+  'index','destroy'
+]);
+Route::group(['prefix'=>'pengaduan'],function () {
+  Route::post('/list','PengaduanController@index');
+});
+// End
+
 Route::group(['middleware' => 'auth:sanctum'], function() {
   // Admin
   Route::group(['prefix'=>'admin'],function () {
@@ -109,16 +118,6 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
   Route::group(['prefix'=>'notif'],function () {
     Route::post('/list','NotifController@index');
     Route::post('/totalunread','NotifController@postTotalUnread');
-  });
-  // End
-
-  // Pengaduan
-  Route::resource('Pengaduan', 'PengaduanController')->except([
-    'index','destroy'
-  ]);
-  Route::group(['prefix'=>'Pengaduan'],function () {
-    Route::post('/list','PengaduanController@index');
-    Route::post('/totalunread','PengaduanController@postTotalUnread');
   });
   // End
 

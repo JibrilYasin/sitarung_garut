@@ -32,4 +32,34 @@ class PengaduanController extends Controller
       return false;
     }
   }
+  public function store(Request $request){
+    $validate = \Validator::make($request->all(), [
+      'pengaduanNameInput' => 'required|min:2',
+      'pengaduanPhoneInput' => 'required|min:10',
+      'pengaduanTitleInput' => 'required|min:3',
+      'pengaduanContentInput' => 'required|min:10',
+      'pengaduanFileInput' => 'required|image|max:1000|mimes:jpeg,jpg,png',
+    ]);
+    if ($validate->fails()) {
+      $response = [
+        'status' => 'error',
+        'message' => 'Validator error',
+        'errors' => $validate->errors(),
+      ];
+      return response()->json($response, 422);
+    }else{
+      if(\App\Models\Pengaduan::storeData($request)){
+        $response = [
+          'status' => 'success',
+          'message' => 'Pengaduan berhasil dikirim.',
+        ];
+      }else{
+        $response = [
+          'status' => 'error',
+          'message' => 'Mohon maaf terjadi kesalahan, silahkan coba lagi.',
+        ];
+      }
+      return response()->json($response, 200);
+    }
+  }
 }

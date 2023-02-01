@@ -226,7 +226,7 @@ class PermohonanController extends Controller
     $path = $mainpath . $subpath;
 
     $phpWord = new \PhpOffice\PhpWord\PhpWord();
-    $section = $phpWord->addSection();
+    $section = $phpWord->addSection(['marginLeft' => 200, 'marginRight' => 200,'marginTop' => 200, 'marginBottom' => 200]);
     $data['permohonan'] = $this->polImpact()['permohonan'];
     $data['polaruang'] = $this->polImpact()['polaruang'];
     $data['sawah'] = $this->polImpact()['sawah'];

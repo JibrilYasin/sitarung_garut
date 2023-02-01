@@ -32,7 +32,7 @@
           <i class="bx bx-shape-square"></i>
           <span class="tooltip-sidebar">List Permohonan</span>
         </li>
-        <li>
+        <li @click="showFormPengaduanModal">
           <i class="bx bx-mail-send"></i>
           <span class="tooltip-sidebar">Pengaduan</span>
         </li>
@@ -123,7 +123,7 @@
                       <div></div>
                       <div></div>
                     </div>
-                    <a class="hex-content" href="javascript:void(0)">
+                    <a class="hex-content" href="javascript:void(0)" @click="showFormPengaduanModal">
                       <span class="hex-content-inner">
                         <span class="icon">
                           <i class="bx bx-mail-send"></i>
@@ -183,7 +183,9 @@
     <!-- Modal Detail Permohonan -->
     <modalDetailPermohonan ref="refModalDetailPermohonan"></modalDetailPermohonan>
     <!-- End -->
-
+    <!-- Modal Form Pengaduan -->
+    <modalFormPengaduan ref="refModalFormPengaduan"></modalFormPengaduan>
+    <!-- End -->
   </div>
 </template>
 <script>
@@ -201,6 +203,7 @@
   import modalMap from "./modals/permohonan/Map";
   import modalPermohonan from "./modals/permohonan/Permohonan";
   import modalDetailPermohonan from "./modals/permohonan/Detail";
+  import modalFormPengaduan from "./modals/pengaduan/Form";
   export default {
     name: "MainPage",
     props:['title'],
@@ -216,7 +219,8 @@
       modalDistricts,
       modalMap,
       modalPermohonan,
-      modalDetailPermohonan
+      modalDetailPermohonan,
+      modalFormPengaduan
     },
     data() {
       return {
@@ -524,6 +528,13 @@
         this.$nextTick(() => {
           setTimeout(() => {
             this.$refs.refModalDetailPermohonan.showModal(data);
+          }, 50);
+        });
+      },
+      showFormPengaduanModal(data) {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.$refs.refModalFormPengaduan.showModal(data);
           }, 50);
         });
       },

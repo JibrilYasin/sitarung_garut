@@ -27,23 +27,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       detailmap: null,
       zoom: 10,
       center: [-7.3650327, 107.5295489],
-      osm: L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      osm: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 20,
-        attribution: "© OpenStreetMap"
+        attribution: '© OpenStreetMap'
       }),
-      rbiMap: L.tileLayer("https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x}", {
-        attribution: "&copy; https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x} Contributors",
+      gStreet: L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
         maxZoom: 20,
-        subdomains: ["mt0", "mt1", "mt2", "mt3"]
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
       }),
-      gSatelliteMap: L.tileLayer("https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+      rbiMap: L.tileLayer('https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x} Contributors',
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+      }),
+      grayscaleMap: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        maxZoom: 20
+      }),
+      gSatelliteMap: L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         attribution: '&copy; <a href="https://maps.google.com">GoogleMap</a> Contributors',
         maxZoom: 20,
-        subdomains: ["mt0", "mt1", "mt2", "mt3"]
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
       }),
-      googleHybrid: L.tileLayer("https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+      googleHybrid: L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
         maxZoom: 20,
-        subdomains: ["mt0", "mt1", "mt2", "mt3"]
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
       })
     };
   },
@@ -81,7 +89,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (response) {
                   var self = _this;
                   _this.detailmap = new L.Map("detailMap", {
-                    layers: [_this.gSatelliteMap],
+                    layers: [_this.googleHybrid],
                     center: _this.center
                   });
                   var baseLayers = {

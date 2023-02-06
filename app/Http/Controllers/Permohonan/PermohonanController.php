@@ -122,6 +122,14 @@ class PermohonanController extends Controller
       return response()->json($response, 422);
     }else{
       if (\App\Models\Permohonan::statusData($request)) {
+
+        // Generate Docs
+        $maxstatus = \App\Models\StatusPermohonan::max('id');
+        if($maxstatus == $request->statusPermohonanInput){
+          $this->generateDocs($request->id);
+        }
+        // End
+
         $response = [
           'status' => 'success',
           'message' => 'Proses berhasil.',
@@ -219,7 +227,7 @@ class PermohonanController extends Controller
     $pdf = PDF::loadView('pdf.statuspermohonan');
     $pdf->save($path . '/' . $fileName);
   }
-  public function generateDocs()
+  public function generateDocs($id)
   {
     $mainpath = \App\Helpers\MyFunction::pathAssetGeneral();
     $subpath = '/docs/';
@@ -227,16 +235,16 @@ class PermohonanController extends Controller
 
     $phpWord = new \PhpOffice\PhpWord\PhpWord();
     $section = $phpWord->addSection(['marginLeft' => 200, 'marginRight' => 200,'marginTop' => 200, 'marginBottom' => 200]);
-    $data['permohonan'] = $this->polImpact()['permohonan'];
-    $data['polaruang'] = $this->polImpact()['polaruang'];
-    $data['sawah'] = $this->polImpact()['sawah'];
+    $data['permohonan'] = $this->polImpact($id)['permohonan'];
+    $data['polaruang'] = $this->polImpact($id)['polaruang'];
+    $data['sawah'] = $this->polImpact($id)['sawah'];
     \PhpOffice\PhpWord\Shared\Html::addHtml($section,\View::make('docs.statuspermohonan',$data)->render() , false, false);
 
     $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
     $objWriter->save($path.$data['permohonan']['invoice'].'.docx');
     return view('docs.statuspermohonan',$data);
   }
-  public function polImpact(){
+  public function polImpact($id){
     $query = \App\Models\Permohonan::select(
       'permohonan.id',
       'permohonan.invoice',
@@ -249,7 +257,7 @@ class PermohonanController extends Controller
       \DB::raw("(ST_AsGeoJSON(ogc_geom)) as geom_json")
     )
     ->leftJoin('users','permohonan.user_id','users.id')
-    ->where('permohonan.id',3)
+    ->where('permohonan.id',$id)
     ->first();
     $json = json_decode($query->geom_json);
     $data = $json->coordinates[0];

@@ -20,6 +20,7 @@
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Desa</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder d-none">Alamat Lokasi</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Rencana Kegiatan</th>
+                  <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder text-center">File DOCX</th>
                 </tr>
                 <tr>
                   <th class="text-center"></th>
@@ -55,6 +56,7 @@
                   <th class="text-center">
                     <input id="peruntukanColumn" type="text" class="filtertext form-control form-control-sm" placeholder="Cari" v-on:keyup.enter="onEnter"/>
                   </th>
+                  <th class="text-center"></th>
                 </tr>
               </thead>
               <tbody>
@@ -81,6 +83,10 @@
                   <td nowrap class="align-top text-xs">{{ value['desa'] }}</td>
                   <td class="align-top text-xs d-none"><span v-html="setMatch(value['alamat_lahan'].toString(),'alamatLahanColumn')"></span></td>
                   <td nowrap class="align-top text-xs"><span v-html="setMatch(value['peruntukan'].toString(),'peruntukanColumn')"></span></td>
+                  <td nowrap class="align-top text-xs text-center">
+                    <a v-if="maxStatus == value['status_permohonan_id']" :href="baseurl+'/docs/'+value['invoice']+'.docx'" class="btn btn-xs btn-info" target="_blank">{{ value['invoice']+'.docx' }}</a>
+                    <span v-else>-</span>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -105,11 +111,13 @@
     props: ["title"],
     data() {
       return {
+        baseurl: baseurl,
         getList: {},
         getDataKecamatan: {},
         getDataDesa: {},
         getDataStatusPermohonan: {},
         currentpage: 0,
+        maxStatus:0,
       };
     },
     components: {
@@ -122,6 +130,7 @@
     },
     created() {
       this.$store.dispatch("setTitleCMS", this.$props.title);
+      this.maxStatus = 0;
       this.getDataDesa = {}
       this.loadDistricts();
       this.loadStatusPermohonan();
@@ -179,6 +188,7 @@
           })
           .then((response) => {
             this.getDataStatusPermohonan = response.data;
+            this.maxStatus = Math.max(...response.data.map(o => o.id), 0)
             this.$isLoading(false);
           })
           .catch((error) => {

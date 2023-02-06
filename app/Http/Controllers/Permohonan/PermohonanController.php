@@ -43,15 +43,16 @@ class PermohonanController extends Controller
     return $data;
   }
   public function store(Request $request){
-    $geojson = json_decode($request->geojson,true);
-    if(count($geojson['features']) < 1){
-      $response = [
-        'status' => 'warning',
-        'message' => 'Anda belum menentukan titik lokasi.',
-      ];
-      return response()->json($response, 200);
+    if($request->pengaduanVIA == 'Website'){
+      $geojson = json_decode($request->geojson,true);
+      if(count($geojson['features']) < 1){
+        $response = [
+          'status' => 'warning',
+          'message' => 'Anda belum menentukan titik lokasi.',
+        ];
+        return response()->json($response, 200);
+      }
     }
-
     $validate = \Validator::make($request->all(), [
       'districtsInput' => 'required',
       'desaInput' => 'required',
@@ -73,11 +74,19 @@ class PermohonanController extends Controller
       ];
       return response()->json($response, 422);
     }else{
-      $original_data = $geojson['features'][0]['geometry']['coordinates'][0];
-      krsort($original_data);
       $datacor = [];
-      foreach($original_data as $key=>$v){
-        $datacor[]=$v[0].' '.$v[1];
+      if($request->pengaduanVIA == 'Website'){
+        $original_data = $geojson['features'][0]['geometry']['coordinates'][0];
+        krsort($original_data);
+        foreach($original_data as $key=>$v){
+          $datacor[]=$v[0].' '.$v[1];
+        }
+      }else{
+        foreach(explode(' | ',$request->coordinatesInput) as $value){
+          $lat = explode(",",$value)[1];
+          $lng = explode(",",$value)[0];
+          $datacor[]=explode(" : ",$lat)[1].' '.explode(" : ",$lng)[1];
+        }
       }
       $datacor = implode(',', $datacor);
 
@@ -89,16 +98,9 @@ class PermohonanController extends Controller
         $geom = $row1->ST_GeomFromText;
       }
       if (\App\Models\Permohonan::storeData($request,$geom)) {
-        $response = [
-          'status' => 'success',
-          'message' => 'Proses berhasil.',
-        ];
+        $response = \App\Helpers\MyFunction::getResponse('success', 'Proses berhasil.');
       } else {
-        $response = [
-          'status' => 'error',
-          'message' => 'Mohon maaf terjadi kesalahan, silahkan coba beberapa saat lagi.',
-        ];
-        $response = \App\Helpers\MyFunction::getResponse('error', 'Mohon maaf, terjadi kesalahan...');
+        $response = \App\Helpers\MyFunction::getResponse('error', 'Mohon maaf terjadi kesalahan, silahkan coba beberapa saat lagi.');
       }
       return response()->json($response, 200);
     }

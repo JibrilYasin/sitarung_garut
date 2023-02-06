@@ -78,7 +78,7 @@
                   <label class="form-label">Koordinat</label>
                   <table class="table">
                     <tbody>
-                      <tr v-for="value in getLatlng" :key="value">
+                      <tr v-for="value in getLatlng">
                         <td>{{ value.split(',')[0] }}</td>
                         <td>{{ value.split(',')[1] }}</td>
                       </tr>
@@ -176,7 +176,7 @@
           })
           .catch((error) => {
             this.$isLoading(false);
-            this.$store.dispatch("removeDispatch", { self: this });
+            //this.$store.dispatch("removeDispatch", { self: this });
           });
       },
       loadPolygon(){
@@ -208,7 +208,7 @@
           })
           .catch((error) => {
             this.$isLoading(false);
-            this.$store.dispatch("removeDispatch", { self: this });
+            //this.$store.dispatch("removeDispatch", { self: this });
           });
       }
     }

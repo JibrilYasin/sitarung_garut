@@ -79,7 +79,7 @@
                     <label class="form-label text-uppercase">Koordinat</label>
                     <table class="table">
                       <tbody>
-                        <tr v-for="value in getLatlng" :key="value">
+                        <tr v-for="value in getLatlng">
                           <td class="text-xs">{{ value.split(',')[0] }}</td>
                           <td class="text-xs">{{ value.split(',')[1] }}</td>
                         </tr>

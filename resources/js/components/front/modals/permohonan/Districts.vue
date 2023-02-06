@@ -506,7 +506,6 @@
           cancelButtonText: "Batal",
         }).then((result) => {
           if (result.isConfirmed) {
-
             // Action Here
             this.$isLoading(true);
             this.formErrors = {};
@@ -529,6 +528,7 @@
               datas.append("sertifikatInput", document.getElementById("sertifikatInput").files[0]);
             }
             datas.append("coordinatesInput", JSON.stringify(this.getLatlng));
+            datas.append("pengaduanVIA", 'Website');
             window.axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.state.setToken}`;
             axios
               .post(action, datas, {

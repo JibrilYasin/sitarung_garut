@@ -59,6 +59,20 @@ class Permohonan extends Model
         }
         // End
 
+        // Coordinates
+        if($request->pengaduanVIA == 'Website'){
+          $coordinates = $request->coordinatesInput;
+        }else{
+          $generate = [];
+          foreach(explode(' | ',$request->coordinatesInput) as $value){
+            $lat = explode(",",$value)[1];
+            $lng = explode(",",$value)[0];
+            $generate[]=$lng.','.$lat;
+          }
+          $coordinates = json_encode($generate);
+        }
+        // End
+
         $req = new Permohonan();
         $req->id = $id;
         $req->invoice = $invoice;
@@ -78,7 +92,7 @@ class Permohonan extends Model
         if ($request->hasFile('sertifikatInput')) {
           $req->sertifikat = $sertifikat;
         }
-        $req->coordinates = $request->coordinatesInput;
+        $req->coordinates = $coordinates;
         $req->ogc_geom = $geom;
         $req->save();
 

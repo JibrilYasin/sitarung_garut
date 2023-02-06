@@ -1333,9 +1333,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.$isLoading(false);
       })["catch"](function (error) {
         _this.$isLoading(false);
-        _this.$store.dispatch("removeDispatch", {
-          self: _this
-        });
+        //this.$store.dispatch("removeDispatch", { self: this });
       });
     },
     loadPolygon: function loadPolygon() {
@@ -1371,9 +1369,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.$isLoading(false);
       })["catch"](function (error) {
         _this2.$isLoading(false);
-        _this2.$store.dispatch("removeDispatch", {
-          self: _this2
-        });
+        //this.$store.dispatch("removeDispatch", { self: this });
       });
     }
   }
@@ -1917,6 +1913,7 @@ __webpack_require__.r(__webpack_exports__);
             datas.append("sertifikatInput", document.getElementById("sertifikatInput").files[0]);
           }
           datas.append("coordinatesInput", JSON.stringify(_this5.getLatlng));
+          datas.append("pengaduanVIA", 'Website');
           window.axios.defaults.headers.common["Authorization"] = "Bearer ".concat(_this5.$store.state.setToken);
           axios.post(action, datas, {
             headers: {
@@ -4456,10 +4453,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "background-size": "cover"
     }])
   }, null, 4 /* STYLE */)], 8 /* PROPS */, _hoisted_50)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [_hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.getLatlng, function (value) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
-      key: value
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[0]), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[1]), 1 /* TEXT */)]);
-  }), 128 /* KEYED_FRAGMENT */))])])])])])])])])])]);
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[0]), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[1]), 1 /* TEXT */)]);
+  }), 256 /* UNKEYED_FRAGMENT */))])])])])])])])])])]);
 }
 
 /***/ }),

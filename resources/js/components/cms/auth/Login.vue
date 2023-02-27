@@ -84,7 +84,7 @@
       if(this.$store.state.setTokenCMS != ""){
         return location.assign(baseurl+'/admin');
       }
-    },    
+    },
     methods:{
       submitCMSFormLogin() {
         this.$isLoading(true)

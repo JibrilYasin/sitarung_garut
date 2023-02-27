@@ -23,7 +23,16 @@ class Permohonan extends Model
       DB::transaction(function () use ($request,$geom) {
 
         $id = \App\Helpers\MyFunction::id('permohonan', 'id');
-        $invoice = 'PM-'.sprintf("%011s", $id);
+
+        //Generate Invoice
+        $userid = ($request->user()->id < 10)?'0'.$request->user()->id:$request->user()->id;
+        $countuserpermohonan = Permohonan::select('id')->where('user_id',$request->user()->id)->count();
+        $invoice = 'PM-'.$userid.'-'.sprintf("%03s", $countuserpermohonan+1);
+        // End
+
+        //Generate No Surat
+        $nosurat = sprintf("%03s", $id).'/'.\App\Helpers\Date::getRomawi(date('m')).'/'.date('Y');
+        // End
 
         // Upload Lokasi
         if ($request->hasFile('lokasiInput')) {
@@ -60,22 +69,24 @@ class Permohonan extends Model
         // End
 
         // Coordinates
-        if($request->pengaduanVIA == 'Website'){
-          $coordinates = $request->coordinatesInput;
-        }else{
-          $generate = [];
-          foreach(explode(' | ',$request->coordinatesInput) as $value){
-            $lat = explode(",",$value)[1];
-            $lng = explode(",",$value)[0];
-            $generate[]=$lng.','.$lat;
-          }
-          $coordinates = json_encode($generate);
-        }
+        $coordinates = $request->coordinatesInput;
+        // if($request->pengaduanVIA == 'Website'){
+        //   $coordinates = $request->coordinatesInput;
+        // }else{
+        //   $generate = [];
+        //   foreach(explode(' | ',$request->coordinatesInput) as $value){
+        //     $lat = explode(",",$value)[1];
+        //     $lng = explode(",",$value)[0];
+        //     $generate[]=$lng.','.$lat;
+        //   }
+        //   $coordinates = json_encode($generate);
+        // }
         // End
 
         $req = new Permohonan();
         $req->id = $id;
         $req->invoice = $invoice;
+        $req->nosurat = $nosurat;
         $req->user_id = $request->user()->id;
         $req->kecamatan = $request->districtsInput;
         $req->desa = $request->desaInput;

@@ -9,18 +9,16 @@
         </div>
         <div class="card-body p-3">
           <div class="table-responsive p-0" style="min-height:500px">
-            <table class="table align-items-center mb-0">
+            <table class="table table-striped table-hover mb-0">
               <thead>
                 <tr>
                   <th class="text-center">#</th>
-                  <th nowrap class="text-center text-uppercase text-secondary text-xxs font-weight-bolder" style="width:100px">Aksi</th>
                   <th nowrap class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Tanggal</th>
-                  <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama</th>
+                  <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama Pemohon</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Title</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder text-center" style="width:100px">Status</th>
                 </tr>
                 <tr>
-                  <th class="text-center"></th>
                   <th class="text-center"></th>
                   <th class="text-center"></th>
                   <th>
@@ -39,13 +37,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(value, index) in getList.data" :key="value.id">
+                <tr v-for="(value, index) in getList.data" :key="value.id" style="cursor:pointer" @click="showStatusPermohonan(value)">
                   <td class="text-center align-top text-xs">{{ currentpage + (index+1) }}</td>
-                  <td nowrap class="text-center text-xs">
-                    <div class="btn-group">
-                     <button type="button" class="btn btn-xs btn-primary" @click="showStatusPermohonan(value)">Detail</button>
-                    </div>
-                  </td>
                   <td nowrap class="text-center align-top text-xs">{{ $filters.formatDate(value['created_at']) }}</td>
                   <td class="align-top text-xs">{{ value['name'] }}</td>
                   <td nowrap class="align-top text-xs"><span v-html="setMatch(value['notif_title'].toString(),'titleNotifCMSColumn')"></span></td>

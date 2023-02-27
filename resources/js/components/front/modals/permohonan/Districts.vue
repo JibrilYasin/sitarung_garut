@@ -13,10 +13,26 @@
                 <div style="width: 100%; height: 100%;" id="distmap"></div>
               </div>
               <div class="col-md-4">
-                <div v-if="showCheckPolaRuang" class="form-check form-switch d-none">
-                  <input class="form-check-input" type="checkbox" id="checkPolaRuang" ref="checkPolaRuang" style="vertical-align: middle;margin-top:-1px;height:1rem" @change="checkPolaRuang()">
-                  <label class="form-check-label" for="checkPolaRuang">Tampilkan Pola Ruang</label>
+                <div v-if="showCheck" class="card mb-4">
+                  <div class="card-body">
+                    <div class="mt-2">
+                      <div class="float-start me-3">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="checkPolaRuang" ref="checkPolaRuang" style="vertical-align: middle;margin-top:-1px;height:1rem" @change="checkPolaRuang()">
+                          <label class="form-check-label" for="checkPolaRuang">Tampilkan Pola Ruang</label>
+                        </div>
+                      </div>
+                      <div class="float-start">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="checkLSD" ref="checkLSD" style="vertical-align: middle;margin-top:-1px;height:1rem" @change="checkLSD()">
+                          <label class="form-check-label" for="checkLSD">Tampilkan LSD</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="clear:both"></div>
+                  </div>
                 </div>
+
                 <div class="card">
                   <div class="card-body">
                     <div class="row mb-3">
@@ -33,7 +49,7 @@
                       </div>
                       <div class="col-md-6">
                         <label class="form-label"><sup class="text-danger">(*)</sup> Desa</label>
-                        <select id="desaInput" class="form-control" data-live-search="true" data-size="8" v-on:change="showCheckPolaRuang = false;loadMapSelected()">
+                        <select id="desaInput" class="form-control" data-live-search="true" data-size="8" v-on:change="showCheck = true;loadMapSelected()">
                           <option value="">Pilih Desa</option>
                           <option v-for="value in getDesa" :key="value['id']" :value="value['DESA']">{{ value['DESA'] }}</option>
                         </select>
@@ -159,8 +175,34 @@
         drawCor: null,
         luas: 0,
         formErrors: {},
-        showCheckPolaRuang:false,
-        getLatlng:{}
+        getLatlng:{},
+        showCheck:false,
+        osm:L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: '© OpenStreetMap'
+        }),
+        gStreet:L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }),
+        rbiMap:L.tileLayer('https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '&copy; https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x} Contributors',
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+        }),
+        grayscaleMap:L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 20,
+        }),
+        gSatelliteMap:L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+          attribution: '&copy; <a href="https://maps.google.com">GoogleMap</a> Contributors',
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+        }),
+        googleHybrid:L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }),
       };
     },
     setup () {
@@ -180,7 +222,7 @@
         this.map = null
         this.drawCor = null
         this.luas = 0
-        this.showCheckPolaRuang = false
+        this.showCheck = false
         $("#newPermohonanModal").modal("show");
         $("#districtsInput").addClass("selectpicker")
         $("#desaInput").addClass("selectpicker")
@@ -191,6 +233,7 @@
           $("#desaInput").val("").selectpicker("refresh")
         }, 50);
         $( "#checkPolaRuang" ).prop( "checked", false )
+        $( "#checkLSD" ).prop( "checked", false )
         this.loadDistricts()
       },
       loadDistricts() {
@@ -256,6 +299,8 @@
         if ($("#districtsInput").val() != "") {
           this.nameKec = $("#districtsInput").val();
         }
+        $( "#checkPolaRuang" ).prop( "checked", false )
+        $( "#checkLSD" ).prop( "checked", false )
         let action = baseurl + "/api/map";
         let obj = new Object();
         obj.kecamatan = this.nameKec;
@@ -274,8 +319,18 @@
               this.map.remove();
             }
             this.map = new L.Map("distmap", {
-              layers: [this.$parent.gStreet],
-            }).setView(response.data['features'][0]['properties']['center_point'], 11);
+              layers: [this.googleHybrid],
+            });
+
+            var baseLayers = {
+                "Google Street": this.gStreet,
+                "Google Satellite": this.gSatelliteMap,
+                "Google Hybrid": this.googleHybrid,
+                "Hitam Putih":this.grayscaleMap,
+                "Rupa Bumi Indonesia":this.rbiMap,
+            };
+            this.map.setView(response.data['features'][0]['properties']['center_point'], 11);
+            L.control.layers(baseLayers).addTo(this.map);
 
             if (this.nameKec == "") {
               this.$isLoading(false);
@@ -325,10 +380,6 @@
                 var type = e.layerType;
                 var layer = e.layer;
                 self.editableLayers.addLayer(layer);
-                // var points = e.layer.getLatLngs();
-                // puncte1=points.join(',');
-                // puncte1=puncte1.toString();
-                // puncte1=points.join(',').match(/([\d\.]+)/g).join(',')
                 var finalGeo = self.editableLayers.toGeoJSON();
                 var getCoordinates = finalGeo['features'][0]['geometry']['coordinates'][0];
                 let finalCoordinates = []
@@ -349,8 +400,8 @@
             }
 
             var myStyle = {
-              color: "#F00",
-              fillColor: "#F00",
+              color: "#ff7800",
+              fillColor: "#ff7800",
               weight: 2,
               opacity: 1,
               fillOpacity: 0,
@@ -407,7 +458,6 @@
           })
           .then((response) => {
             let self = this;
-
             var jsonData = L.geoJSON(response.data, {
               style: function (feature) {
                 switch (feature.properties.keterangan) {
@@ -469,6 +519,52 @@
                     return { color: "#429E09", fillColor: "#429E09", opacity: 0, fillOpacity: 0.9 };
                   case "Sempadan Sungai":
                     return { color: "#41251D", fillColor: "#41251D", opacity: 0, fillOpacity: 0.9 };
+                }
+              },
+              onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.keterangan);
+                // layer.bindTooltip(feature.properties.keterangan, {
+                //   direction: "center",
+                //   className: "labelstyle",
+                // });
+              },
+            }).addTo(this.map);
+
+            this.$isLoading(false);
+          })
+          .catch((error) => {
+            this.$isLoading(false);
+            this.$store.dispatch("removeDispatch", { self: this });
+          });
+      },
+      checkLSD(){
+        if (this.$refs.checkLSD.checked) {
+          this.loadLSD();
+        } else {
+          this.loadMapSelected();
+        }
+      },
+      loadLSD() {
+        this.$isLoading(true);
+        let action = baseurl + "/api/polalsd";
+        let obj = new Object();
+        obj.kecamatan = this.nameKec;
+        obj.desa = $("#desaInput").val();
+        window.axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.state.setToken}`;
+        axios
+          .post(action, obj, {
+            headers: {
+              Accept: "application/json",
+            },
+          })
+          .then((response) => {
+            let self = this;
+            console.log(JSON.stringify(response.data));
+            var jsonData = L.geoJSON(response.data, {
+              style: function (feature) {
+                switch (feature.properties.keterangan) {
+                  case "Sepakat Dipertahankan":
+                    return { color: "#5A5AC3", fillColor: "#5A5AC3", opacity: 1, fillOpacity: 0.9 };
                 }
               },
               onEachFeature: function (feature, layer) {

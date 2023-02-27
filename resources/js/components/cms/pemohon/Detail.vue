@@ -4,9 +4,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <h6 class="modal-title">Detail Pemohon</h6>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true"><i class="text-primary bx bx-x text-lg"></i></span>
-          </button>
         </div>
         <div class="modal-body">
           <div class="row mb-3">
@@ -76,6 +73,7 @@
             <button v-if="getData['status'] == 'Blokir'" type="button" class="btn btn bg-gradient-primary mb-0" @click="statusAction('UnBlock','Approve')">Ublock</button>
             <button v-if="getData['status'] == 'Approve'" type="button" class="btn btn bg-gradient-warning mb-0" @click="openReject('Blokir','Blokir')">Blokir</button>
             <button v-if="getData['status'] == 'New'" type="button" class="btn btn bg-gradient-warning mb-0" @click="openReject('Reject','Reject')">Reject</button>
+            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
           </div>
           <div v-if="groupBtnHide" class="btn-group">
             <button id="submitBlokir" type="button" class="btn btn bg-gradient-danger mb-0" @click="rejectAction()">Submit</button>
@@ -197,10 +195,17 @@
         $("#notesPemohonInput").prop('readonly', false);
       },
       cancelReject(){
-        this.notes = false
+        if(this.getData.notes == '' || this.getData.notes == null){
+          this.notes = false
+          $("#notesPemohonInput").val('');
+          $("#notesPemohonInput").prop('readonly', false);
+        }else{
+          this.notes = true
+          $("#notesPemohonInput").val(this.getData.notes);
+          $("#notesPemohonInput").prop('readonly', true);
+        }
         this.groupBtn = true
         this.groupBtnHide = false
-        $("#notesPemohonInput").val('');
       },
       rejectAction(){
         if(this.getData['status'] == 'New'){

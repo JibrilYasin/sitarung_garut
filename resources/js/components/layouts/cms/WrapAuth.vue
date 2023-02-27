@@ -2,6 +2,11 @@
   <metainfo>
     <template v-slot:title="{ content }">{{ $store.state.setTitle }}</template>
   </metainfo>
+  <div id="mainPreloaderAuth" class="d-block" style="position:absolute;background:linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);width:100%;height:100%;z-index:999999">
+    <div style="position: absolute;left: 50%;top: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);">
+      <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+  </div>
   <main class="main-content  mt-0">
     <section>
       <div class="page-header min-vh-100">
@@ -33,7 +38,10 @@
 
     },
     mounted() {
-
+      setTimeout(function() {
+        $("#mainPreloaderAuth").removeClass('d-block')
+        $("#mainPreloaderAuth").addClass('d-none')
+      }, 1000);
     },
     methods:{
       // getProfile() {

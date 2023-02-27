@@ -13,7 +13,7 @@
                   <th class="text-center">#</th>
                   <th nowrap class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Aksi</th>
                   <th nowrap class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Tanggal Dibuat</th>
-                  <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder text-center">Kode</th>
+                  <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder text-center">No Permohonan</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Nama Pemohon</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Status</th>
                   <th nowrap class="text-uppercase text-secondary text-xxs font-weight-bolder">Kecamatan</th>

@@ -74,6 +74,7 @@ class PermohonanController extends Controller
       ];
       return response()->json($response, 422);
     }else{
+
       $datacor = [];
       if($request->pengaduanVIA == 'Website'){
         $original_data = $geojson['features'][0]['geometry']['coordinates'][0];
@@ -82,11 +83,18 @@ class PermohonanController extends Controller
           $datacor[]=$v[0].' '.$v[1];
         }
       }else{
-        foreach(explode(' | ',$request->coordinatesInput) as $value){
-          $lat = explode(",",$value)[1];
-          $lng = explode(",",$value)[0];
-          $datacor[]=explode(" : ",$lat)[1].' '.explode(" : ",$lng)[1];
+        $latitude = explode(',',$request->latitude);
+        $gencoordinates = [];
+        foreach (explode(',',$request->longitude) as $key => $value) {
+          $datacor[] = $value . ' ' . $latitude[$key];
+          $gencoordinates[] = 'lat : '.$latitude[$key].',lng : '.$value;
         }
+        $request->merge(['coordinatesInput'=>json_encode($gencoordinates)]);
+        // foreach(explode(' | ',$request->coordinatesInput) as $value){
+        //   $lat = explode(",",$value)[1];
+        //   $lng = explode(",",$value)[0];
+        //   $datacor[]=explode(" : ",$lat)[1].' '.explode(" : ",$lng)[1];
+        // }
       }
       $datacor = implode(',', $datacor);
 

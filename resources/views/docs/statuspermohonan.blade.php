@@ -7,7 +7,7 @@
           <tr>
             <td valign="top" style="width:100px;line-height:30px">Nomor</td>
             <td valign="top" style="width:10px;line-height:30px">:</td>
-            <td valign="top" style="width:270px;line-height:30px">{{ $permohonan['invoice'] }} </td>
+            <td valign="top" style="width:270px;line-height:30px">{{ $permohonan['nosurat'] }} </td>
           </tr>
           <tr>
             <td valign="top" style="width:100px;line-height:30px">Sifat</td>
@@ -45,7 +45,7 @@
     </tr>
     <tr>
       <td colspan="2">
-        <p>Menjawab surat dari Saudara Nomor: {{ $permohonan['invoice'] }} tanggal {{ \App\Helpers\Date::shortDate($permohonan['created_at']) }} perihal permohonan Keterangan Rencana Kota (KRK) sehubungan dengan pembangunan “{{ $permohonan['peruntukan'] }}” yang berlokasi di {{ $permohonan['alamat_lahan'] }} di lahan seluas + {{ $permohonan['luas_lahan_rencana'] }} m2, dengan ini disampaikan beberapa hal sebagai berikut :</p> 
+        <p>Menjawab surat dari Saudara Nomor: {{ $permohonan['nosurat'] }} tanggal {{ \App\Helpers\Date::shortDate($permohonan['created_at']) }} perihal permohonan Keterangan Rencana Kota (KRK) sehubungan dengan pembangunan “{{ $permohonan['peruntukan'] }}” yang berlokasi di {{ $permohonan['alamat_lahan'] }} di lahan seluas + {{ $permohonan['luas_lahan_rencana'] }} m2, dengan ini disampaikan beberapa hal sebagai berikut :</p> 
       </td>
     </tr>
     <tr>

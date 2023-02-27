@@ -267,10 +267,17 @@ __webpack_require__.r(__webpack_exports__);
       $("#notesPemohonInput").prop('readonly', false);
     },
     cancelReject: function cancelReject() {
-      this.notes = false;
+      if (this.getData.notes == '' || this.getData.notes == null) {
+        this.notes = false;
+        $("#notesPemohonInput").val('');
+        $("#notesPemohonInput").prop('readonly', false);
+      } else {
+        this.notes = true;
+        $("#notesPemohonInput").val(this.getData.notes);
+        $("#notesPemohonInput").prop('readonly', true);
+      }
       this.groupBtn = true;
       this.groupBtnHide = false;
-      $("#notesPemohonInput").val('');
     },
     rejectAction: function rejectAction() {
       var _this2 = this;
@@ -598,7 +605,11 @@ var _hoisted_2 = {
 var _hoisted_3 = {
   "class": "modal-content"
 };
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\"><h6 class=\"modal-title\">Detail Pemohon</h6><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\"><i class=\"text-primary bx bx-x text-lg\"></i></span></button></div>", 1);
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "modal-header"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", {
+  "class": "modal-title"
+}, "Detail Pemohon")], -1 /* HOISTED */);
 var _hoisted_5 = {
   "class": "modal-body"
 };
@@ -704,7 +715,12 @@ var _hoisted_43 = {
   key: 0,
   "class": "btn-group"
 };
-var _hoisted_44 = {
+var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  type: "button",
+  "class": "btn bg-gradient-secondary",
+  "data-bs-dismiss": "modal"
+}, "Close", -1 /* HOISTED */);
+var _hoisted_45 = {
   key: 1,
   "class": "btn-group"
 };
@@ -788,7 +804,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[3] || (_cache[3] = function ($event) {
       return $options.openReject('Reject', 'Reject');
     })
-  }, "Reject")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.groupBtnHide ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "Reject")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_44])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.groupBtnHide ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     id: "submitBlokir",
     type: "button",
     "class": "btn btn bg-gradient-danger mb-0",
@@ -1120,13 +1136,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Data_vue_vue_type_template_id_7ebafdba__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Data.vue?vue&type=template&id=7ebafdba */ "./resources/js/components/cms/pemohon/Data.vue?vue&type=template&id=7ebafdba");
 /* harmony import */ var _Data_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Data.vue?vue&type=script&lang=js */ "./resources/js/components/cms/pemohon/Data.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Data_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Data_vue_vue_type_template_id_7ebafdba__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/pemohon/Data.vue"]])
+const __exports__ = /*#__PURE__*/(0,_Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Data_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Data_vue_vue_type_template_id_7ebafdba__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/pemohon/Data.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -1147,13 +1163,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Detail_vue_vue_type_template_id_71053ce1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Detail.vue?vue&type=template&id=71053ce1 */ "./resources/js/components/cms/pemohon/Detail.vue?vue&type=template&id=71053ce1");
 /* harmony import */ var _Detail_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Detail.vue?vue&type=script&lang=js */ "./resources/js/components/cms/pemohon/Detail.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Detail_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Detail_vue_vue_type_template_id_71053ce1__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/pemohon/Detail.vue"]])
+const __exports__ = /*#__PURE__*/(0,_Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Detail_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Detail_vue_vue_type_template_id_71053ce1__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/pemohon/Detail.vue"]])
 /* hot reload */
 if (false) {}
 

@@ -144,6 +144,35 @@ class MainController extends Controller
       return false;
     }
   }
+  public function postPolaLSD(Request $request){
+    try {
+      $query = \App\Models\LSD::select('ID', 'LSD', 'KESIMPULAN','LUAS','KECAMATAN','DESA', \DB::raw("(ST_AsGeoJSON(ogc_geom)) as geom_json"))
+      ->where('KECAMATAN', $request->kecamatan)
+      ->where('DESA', $request->desa)
+      ->get();
+      $geoJSON = array(
+        'type' => 'FeatureCollection',
+        'features' => array()
+      );
+      $center_point = '';
+      foreach ($query as $key => $value) {
+        $json = json_decode($value->geom_json);
+        $marker = array(
+          'type' => 'Feature',
+          'properties' => array(
+            'keterangan' => $value['KESIMPULAN'],
+            'luas' => $value['LUAS'],
+          ),
+          'geometry' =>  $json
+        );
+        array_push($geoJSON['features'], $marker);
+      }
+      return $geoJSON;
+    } catch (\Exception $e) {
+      \Debugbar::addThrowable($e);
+      return false;
+    }
+  }
   public function getCompany(){
     try {
       $query = \App\Services\CompanyServices::getData();

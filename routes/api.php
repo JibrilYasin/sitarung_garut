@@ -30,6 +30,7 @@ Route::post('/otp','Front\Auth\AuthController@postOTP');
 Route::post('/reset','Front\Auth\AuthController@postReset');
 Route::post('/map','MainController@index');
 Route::post('/polaruang','MainController@postPolaRuang');
+Route::post('/polalsd','MainController@postPolaLSD');
 Route::get('/company','MainController@getCompany');
 
 Route::group(['prefix'=>'permohonan'],function () {

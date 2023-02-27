@@ -2,6 +2,11 @@
   <metainfo>
     <template v-slot:title="{ content }">{{ $store.state.setTitleCMS }}</template>
   </metainfo>
+  <div id="mainPreloaderAuth" class="d-block" style="position:absolute;background:linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);width:100%;height:100%;z-index:999999">
+    <div style="position: absolute;left: 50%;top: 50%;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);">
+      <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+    </div>
+  </div>
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
@@ -300,7 +305,10 @@
       }
     },
     mounted(){
-
+      setTimeout(function() {
+        $("#mainPreloaderAuth").removeClass('d-block')
+        $("#mainPreloaderAuth").addClass('d-none')
+      }, 1000);
     },
     computed: {
       ...mapState(["setProfileCMS","setCompany"]),

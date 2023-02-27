@@ -14,7 +14,7 @@
                   <th class="text-center">#</th>
                   <th nowrap class="text-center">Aksi</th>
                   <th nowrap class="text-center">Tanggal Dibuat</th>
-                  <th nowrap class="text-center">Kode</th>
+                  <th nowrap class="text-center">No Permohonan</th>
                   <th nowrap>Status</th>
                   <th nowrap>Kecamatan</th>
                   <th nowrap>Desa</th>

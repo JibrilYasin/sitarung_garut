@@ -298,6 +298,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       email: '',
       map: null,
       zoom: 10,
+      opacity: 0.1,
       center: [-7.3650327, 107.5295489],
       osm: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 20,
@@ -333,9 +334,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       toast: toast
     };
   },
+  mounted: function mounted() {
+    var slider = document.getElementById("opacityColor");
+    slider.oninput = function () {
+      this.opacity = slider.value;
+      console.log(this.opacity);
+    };
+  },
   methods: {
     showModal: function showModal(data) {
       this.getDetailList = data;
+      this.opacity = 0.6;
       this.getLatlng = JSON.parse(data['coordinates']);
       if (data.fotolokasi) {
         this.lokasi = imagepath + '/' + data.fotolokasi;
@@ -412,11 +421,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }).then(function (response) {
                   var self = _this2;
-                  _this2.map = new L.Map("detailMap", {
-                    layers: [_this2.googleHybrid],
-                    center: _this2.center
-                  });
-                  _this2.map.setView(_this2.center, 10);
+                  var opacCtrl = {
+                    map: {
+                      center: _this2.center,
+                      zoom: 10
+                    },
+                    otmLayer: {
+                      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                      options: {
+                        attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+                        maxZoom: 17
+                      }
+                    },
+                    satelliteLayer: {
+                      url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                      options: {
+                        attribution: '&copy; <a href="http://www.esri.com/">Esri</a>',
+                        maxZoom: 18
+                      }
+                    },
+                    opacityBaseControl: {
+                      options: {
+                        sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider3d7.png",
+                        backgroundColor: "rgba(0, 0, 0, 0.9)",
+                        opacity: 1,
+                        position: 'topright'
+                      }
+                    },
+                    opacityOverlayControl: {
+                      options: {
+                        sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider2.png",
+                        backgroundColor: "rgba(229, 227, 223, 0.9)",
+                        opacity: 0.75,
+                        position: 'topright'
+                      }
+                    }
+                  };
+                  _this2.map = new L.Map("detailMap", opacCtrl.map);
+                  var layer = new L.TileLayer(opacCtrl.otmLayer.url, opacCtrl.otmLayer.options);
+                  var overlay = new L.TileLayer(opacCtrl.satelliteLayer.url, opacCtrl.satelliteLayer.options);
+                  var controlBaseOpacity = new L.Control.OpacitySlider(null, opacCtrl.opacityBaseControl.options);
+                  var controlOverlayOpacity = new L.Control.OpacitySlider(overlay, opacCtrl.opacityOverlayControl.options);
+                  //controlBaseOpacity.addTo(this.map);
+                  controlOverlayOpacity.addTo(_this2.map);
+                  layer.addTo(_this2.map);
+
+                  //this.map.setView(this.center, 10);
+
                   var myStyle = {
                     color: "#FFF",
                     fillColor: "#FFF",
@@ -501,203 +552,203 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   color: "#0001EE",
                   fillColor: "#0001EE",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Rawan Bencana Banjir":
                 return {
                   color: "#2EA4DB",
                   fillColor: "#2EA4DB",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Cagar Alam dan Cagar Alam Laut":
                 return {
                   color: "#5A5AC3",
                   fillColor: "#5A5AC3",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Perlindungan Geologi (Karst)":
                 return {
                   color: "#968796",
                   fillColor: "#968796",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Hutan Mangrove":
                 return {
                   color: "#2D966E",
                   fillColor: "#2D966E",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Sempadan Situ":
                 return {
                   color: "#05D7D7",
                   fillColor: "#05D7D7",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Resapan Air":
                 return {
                   color: "#194128",
                   fillColor: "#194128",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Hutan Produksi Terbatas":
                 return {
                   color: "#4B9B37",
                   fillColor: "#4B9B37",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Hutan Rakyat":
                 return {
                   color: "#9BC89B",
                   fillColor: "#9BC89B",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Industri":
                 return {
                   color: "#690000",
                   fillColor: "#690000",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Pariwisata":
                 return {
                   color: "#FFA5FF",
                   fillColor: "#FFA5FF",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Perkebunan":
                 return {
                   color: "#AFAF37",
                   fillColor: "#AFAF37",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Permukiman Perdesaan":
                 return {
                   color: "#F59B1E",
                   fillColor: "#F59B1E",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Pertanian Lahan Basah":
                 return {
                   color: "#C8F546",
                   fillColor: "#C8F546",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Ruang Terbuka Hijau":
                 return {
                   color: "#D2BEFF",
                   fillColor: "#D2BEFF",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Sungai":
                 return {
                   color: "#97DBF2",
                   fillColor: "#97DBF2",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Hutan Produksi Tetap":
                 return {
                   color: "#7db437",
                   fillColor: "#7db437",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Rawan Bencana Gunung Api I":
                 return {
                   color: "#EC0000",
                   fillColor: "#EC0000",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Rawan Bencana Gunung Api II":
                 return {
                   color: "#F69331",
                   fillColor: "#F69331",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Rawan Bencana Gunung Api III":
                 return {
                   color: "#EFDD2E",
                   fillColor: "#EFDD2E",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Rawan Gerakan Tanah Menengah":
                 return {
                   color: "#fc8d59",
                   fillColor: "#fc8d59",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Rawan Gerakan Tanah Tinggi":
                 return {
                   color: "#d7301f",
                   fillColor: "#d7301f",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Taman Buru":
                 return {
                   color: "#4696ff",
                   fillColor: "#4696ff",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kaw. Taman Wisata Alam dan Taman Wisata Laut":
                 return {
                   color: "#e6d2ff",
                   fillColor: "#e6d2ff",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Hutan Lindung":
                 return {
                   color: "#325f28",
                   fillColor: "#325f28",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Permukiman Perkotaan":
                 return {
                   color: "#f59b1e",
                   fillColor: "#f59b1e",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Kawasan Pertanian Lahan Kering":
                 return {
                   color: "#807c29",
                   fillColor: "#807c29",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Sempadan Pantai":
                 return {
                   color: "#429E09",
                   fillColor: "#429E09",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
               case "Sempadan Sungai":
                 return {
                   color: "#41251D",
                   fillColor: "#41251D",
                   opacity: 0,
-                  fillOpacity: 0.6
+                  fillOpacity: self.opacity
                 };
             }
           },
@@ -806,7 +857,7 @@ var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 }, "Tanggal Dibuat"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   nowrap: "",
   "class": "text-uppercase text-secondary text-xxs font-weight-bolder text-center"
-}, "Kode"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+}, "No Permohonan"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
   nowrap: "",
   "class": "text-uppercase text-secondary text-xxs font-weight-bolder"
 }, "Nama Pemohon"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
@@ -1112,114 +1163,126 @@ var _hoisted_13 = {
 var _hoisted_14 = {
   "class": "text-info"
 };
-var _hoisted_15 = {
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "customRange2",
+  "class": "form-label d-none"
+}, "Example range", -1 /* HOISTED */);
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  type: "range",
+  "class": "form-range",
+  min: "0",
+  max: "1",
+  step: "0.1",
+  id: "opacityColor"
+}, null, -1 /* HOISTED */);
+var _hoisted_17 = {
   "class": "mb-3"
 };
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Nama Pemohon", -1 /* HOISTED */);
-var _hoisted_17 = ["value"];
-var _hoisted_18 = {
+var _hoisted_19 = ["value"];
+var _hoisted_20 = {
   "class": "row mb-3"
 };
-var _hoisted_19 = {
+var _hoisted_21 = {
   "class": "col-md-6"
 };
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Kecamatan", -1 /* HOISTED */);
-var _hoisted_21 = ["value"];
-var _hoisted_22 = {
+var _hoisted_23 = ["value"];
+var _hoisted_24 = {
   "class": "col-md-6"
 };
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Desa", -1 /* HOISTED */);
-var _hoisted_24 = ["value"];
-var _hoisted_25 = {
+var _hoisted_26 = ["value"];
+var _hoisted_27 = {
   "class": "mb-3"
 };
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Alamat Lahan", -1 /* HOISTED */);
-var _hoisted_27 = {
+var _hoisted_29 = {
   "class": "form-control",
   rows: "4",
   disabled: ""
 };
-var _hoisted_28 = {
+var _hoisted_30 = {
   "class": "row mb-3"
 };
-var _hoisted_29 = {
+var _hoisted_31 = {
   "class": "col-md-6"
 };
-var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Status Pemohon", -1 /* HOISTED */);
-var _hoisted_31 = ["value"];
-var _hoisted_32 = {
+var _hoisted_33 = ["value"];
+var _hoisted_34 = {
   "class": "col-md-6"
 };
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Luas Lahan Rencana (m"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("sup", null, "2"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(")")], -1 /* HOISTED */);
-var _hoisted_34 = ["value"];
-var _hoisted_35 = {
+var _hoisted_36 = ["value"];
+var _hoisted_37 = {
   "class": "row mb-3"
 };
-var _hoisted_36 = {
+var _hoisted_38 = {
   "class": "col-md-6"
 };
-var _hoisted_37 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Status kepemilikan", -1 /* HOISTED */);
-var _hoisted_38 = ["value"];
-var _hoisted_39 = {
+var _hoisted_40 = ["value"];
+var _hoisted_41 = {
   "class": "col-md-6"
 };
-var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_42 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Nama Pemilik Lahan", -1 /* HOISTED */);
-var _hoisted_41 = ["value"];
-var _hoisted_42 = {
+var _hoisted_43 = ["value"];
+var _hoisted_44 = {
   "class": "mb-3"
 };
-var _hoisted_43 = {
+var _hoisted_45 = {
   "class": "row"
 };
-var _hoisted_44 = {
+var _hoisted_46 = {
   "class": "col-md-6"
 };
-var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Foto Lokasi", -1 /* HOISTED */);
-var _hoisted_46 = ["href"];
-var _hoisted_47 = {
+var _hoisted_48 = ["href"];
+var _hoisted_49 = {
   "class": "col-md-6"
 };
-var _hoisted_48 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Foto Sertifikat", -1 /* HOISTED */);
-var _hoisted_49 = ["href"];
-var _hoisted_50 = {
+var _hoisted_51 = ["href"];
+var _hoisted_52 = {
   "class": "card"
 };
-var _hoisted_51 = {
+var _hoisted_53 = {
   "class": "card-body"
 };
-var _hoisted_52 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "form-label text-uppercase"
 }, "Koordinat", -1 /* HOISTED */);
-var _hoisted_53 = {
+var _hoisted_55 = {
   "class": "table"
 };
-var _hoisted_54 = {
+var _hoisted_56 = {
   "class": "text-xs"
 };
-var _hoisted_55 = {
+var _hoisted_57 = {
   "class": "text-xs"
 };
-var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_58 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "card mb-0"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "card-body"
@@ -1231,7 +1294,7 @@ var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "form-control",
   readonly: ""
 })])], -1 /* HOISTED */);
-var _hoisted_57 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_59 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "modal-footer"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "btn-group"
@@ -1252,42 +1315,42 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, ["prevent"])),
     action: "javascript:void(0)",
     method: "POST"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Status Saat Ini : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.getDetailList['status_title']), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Status Saat Ini : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.getDetailList['status_title']), 1 /* TEXT */)])]), _hoisted_15, _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['name'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_17)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, _hoisted_19)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['kecamatan'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_21)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, _hoisted_23)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['desa'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_24)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", _hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.getDetailList['alamat_lahan']), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, _hoisted_26)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.getDetailList['alamat_lahan']), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [_hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['status_pemohon'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_31)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, _hoisted_33)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [_hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['luas_lahan_rencana'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_34)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [_hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, _hoisted_36)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [_hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['status_kepemilikan_lahan'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_38)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [_hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 8 /* PROPS */, _hoisted_40)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [_hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
     "class": "form-control",
     value: $data.getDetailList['nama_pemilik_lahan'],
     disabled: ""
-  }, null, 8 /* PROPS */, _hoisted_41)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  }, null, 8 /* PROPS */, _hoisted_43)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [_hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     href: $data.lokasi,
     "data-featherlight": "image"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -1299,7 +1362,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "background-position": "center",
       "background-size": "cover"
     }])
-  }, null, 4 /* STYLE */)], 8 /* PROPS */, _hoisted_46)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_hoisted_48, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  }, null, 4 /* STYLE */)], 8 /* PROPS */, _hoisted_48)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [_hoisted_50, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     href: $data.sertifikat,
     "data-featherlight": "image"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -1311,9 +1374,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "background-position": "center",
       "background-size": "cover"
     }])
-  }, null, 4 /* STYLE */)], 8 /* PROPS */, _hoisted_49)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [_hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.getLatlng, function (value) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[0]), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[1]), 1 /* TEXT */)]);
-  }), 256 /* UNKEYED_FRAGMENT */))])])])]), _hoisted_56])])]), _hoisted_57], 32 /* HYDRATE_EVENTS */)])])]);
+  }, null, 4 /* STYLE */)], 8 /* PROPS */, _hoisted_51)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [_hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_55, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.getLatlng, function (value) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[0]), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[1]), 1 /* TEXT */)]);
+  }), 256 /* UNKEYED_FRAGMENT */))])])])]), _hoisted_58])])]), _hoisted_59], 32 /* HYDRATE_EVENTS */)])])]);
 }
 
 /***/ }),
@@ -1631,13 +1694,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Data_vue_vue_type_template_id_84b3957a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Data.vue?vue&type=template&id=84b3957a */ "./resources/js/components/cms/permohonan/Data.vue?vue&type=template&id=84b3957a");
 /* harmony import */ var _Data_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Data.vue?vue&type=script&lang=js */ "./resources/js/components/cms/permohonan/Data.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Data_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Data_vue_vue_type_template_id_84b3957a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/permohonan/Data.vue"]])
+const __exports__ = /*#__PURE__*/(0,_Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Data_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Data_vue_vue_type_template_id_84b3957a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/permohonan/Data.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -1658,13 +1721,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Status_vue_vue_type_template_id_22e4956a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Status.vue?vue&type=template&id=22e4956a */ "./resources/js/components/cms/permohonan/Status.vue?vue&type=template&id=22e4956a");
 /* harmony import */ var _Status_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Status.vue?vue&type=script&lang=js */ "./resources/js/components/cms/permohonan/Status.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_saktiyasin_Documents_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Status_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Status_vue_vue_type_template_id_22e4956a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/permohonan/Status.vue"]])
+const __exports__ = /*#__PURE__*/(0,_Volumes_SaktiYasin_webapp_projects_sitarung_garut_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Status_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Status_vue_vue_type_template_id_22e4956a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/cms/permohonan/Status.vue"]])
 /* hot reload */
 if (false) {}
 

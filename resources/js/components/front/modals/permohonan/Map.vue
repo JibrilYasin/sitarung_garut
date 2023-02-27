@@ -43,7 +43,33 @@
         map: null,
         getDataKecamatan:{},
         getDataDesa:{},
-        formErrors: {}
+        formErrors: {},
+        osm:L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: '© OpenStreetMap'
+        }),
+        gStreet:L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }),
+        rbiMap:L.tileLayer('https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '&copy; https://portal.ina-sdi.or.id/arcgis/rest/services/RBI/Basemap/MapServer/tile/{z}/{y}/{x} Contributors',
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+        }),
+        grayscaleMap:L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 20,
+        }),
+        gSatelliteMap:L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+          attribution: '&copy; <a href="https://maps.google.com">GoogleMap</a> Contributors',
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+        }),
+        googleHybrid:L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }),
       };
     },
     methods: {
@@ -135,15 +161,25 @@
               this.map.remove();
             }
             this.map = new L.Map("authmap", {
-              layers: [this.$parent.gStreet],
-            }).setView(response.data['features'][0]['properties']['center_point'], 11);
+              layers: [this.googleHybrid],
+            })
+
+            var baseLayers = {
+                "Google Street": this.gStreet,
+                "Google Satellite": this.gSatelliteMap,
+                "Google Hybrid": this.googleHybrid,
+                "Hitam Putih":this.grayscaleMap,
+                "Rupa Bumi Indonesia":this.rbiMap,
+            };
+            this.map.setView(response.data['features'][0]['properties']['center_point'], 11);
+            L.control.layers(baseLayers).addTo(this.map);
 
             var myStyle = {
-              color: "#F00",
-              fillColor: "#F00",
-              weight: 2,
-              opacity: 1,
-              fillOpacity: 0.5,
+              "color": "#ff7800",
+              "fillColor": "#ff7800",
+              "weight": 1,
+              "opacity": 1,
+              "fillOpacity": 0.4
             };
             var jsonData = L.geoJSON(response.data, {
               zIndexOffset: 1,

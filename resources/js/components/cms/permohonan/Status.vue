@@ -17,6 +17,10 @@
                     <div class="mb-3">
                       <label class="form-label fw-bold">Status Saat Ini : <span class="text-info">{{ getDetailList['status_title'] }}</span></label>
                     </div>
+
+                    <label for="customRange2" class="form-label d-none">Example range</label>
+                    <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityColor">
+
                     <div class="mb-3">
                       <label class="form-label text-uppercase">Nama Pemohon</label>
                       <input type="text" class="form-control" :value="getDetailList['name']" disabled/>
@@ -124,6 +128,7 @@
         email:'',
         map: null,
         zoom: 10,
+        opacity:0.1,
         center: [-7.3650327, 107.5295489],
         osm:L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
@@ -157,9 +162,17 @@
       const toast = useToast();
       return {toast}
     },
+    mounted(){
+      var slider = document.getElementById("opacityColor");
+      slider.oninput = function() {
+        this.opacity = slider.value
+        console.log(this.opacity);
+      }
+    },
     methods:{
       showModal(data){
         this.getDetailList = data
+        this.opacity = 0.6
         this.getLatlng = JSON.parse(data['coordinates'])
         if(data.fotolokasi){
           this.lokasi = imagepath+'/'+data.fotolokasi
@@ -218,12 +231,53 @@
           .then((response) => {
             let self = this;
 
-            this.map = new L.Map("detailMap", {
-              layers: [this.googleHybrid],
-              center: this.center,
-            });
+            var opacCtrl = {
+              map: {
+                center: this.center,
+                zoom:10
+              },
+              otmLayer: {
+                url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                options: {
+                  attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+                  maxZoom: 17,
+                },
+              },
+              satelliteLayer: {
+                url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                options: {
+                  attribution: '&copy; <a href="http://www.esri.com/">Esri</a>',
+                  maxZoom: 18,
+                },
+              },
+              opacityBaseControl: {
+                options: {
+                  sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider3d7.png",
+                  backgroundColor: "rgba(0, 0, 0, 0.9)",
+                  opacity: 1,
+                  position: 'topright',
+                }
+              },
+              opacityOverlayControl: {
+                options: {
+                  sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider2.png",
+                  backgroundColor: "rgba(229, 227, 223, 0.9)",
+                  opacity: 0.75,
+                  position: 'topright',
+                }
+              },
+            };
+            this.map = new L.Map("detailMap", opacCtrl.map);
+            var layer = new L.TileLayer(opacCtrl.otmLayer.url, opacCtrl.otmLayer.options);
+            var overlay = new L.TileLayer(opacCtrl.satelliteLayer.url, opacCtrl.satelliteLayer.options);
 
-            this.map.setView(this.center, 10);
+            var controlBaseOpacity = new L.Control.OpacitySlider(null, opacCtrl.opacityBaseControl.options);
+            var controlOverlayOpacity = new L.Control.OpacitySlider(overlay, opacCtrl.opacityOverlayControl.options);
+            //controlBaseOpacity.addTo(this.map);
+            controlOverlayOpacity.addTo(this.map);
+            layer.addTo(this.map);
+
+            //this.map.setView(this.center, 10);
 
             var myStyle = {
               color: "#FFF",
@@ -328,63 +382,63 @@
               style: function (feature) {
                 switch (feature.properties.keterangan) {
                   case "Danau/Situ":
-                    return { color: "#0001EE", fillColor: "#0001EE", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#0001EE", fillColor: "#0001EE", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Rawan Bencana Banjir":
-                    return { color: "#2EA4DB", fillColor: "#2EA4DB", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#2EA4DB", fillColor: "#2EA4DB", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Cagar Alam dan Cagar Alam Laut":
-                    return { color: "#5A5AC3", fillColor: "#5A5AC3", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#5A5AC3", fillColor: "#5A5AC3", opacity: 0, fillOpacity: self.opacity };
                   case "Perlindungan Geologi (Karst)":
-                    return { color: "#968796", fillColor: "#968796", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#968796", fillColor: "#968796", opacity: 0, fillOpacity: self.opacity };
                   case "Hutan Mangrove":
-                    return { color: "#2D966E", fillColor: "#2D966E", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#2D966E", fillColor: "#2D966E", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Sempadan Situ":
-                    return { color: "#05D7D7", fillColor: "#05D7D7", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#05D7D7", fillColor: "#05D7D7", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Resapan Air":
-                    return { color: "#194128", fillColor: "#194128", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#194128", fillColor: "#194128", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Hutan Produksi Terbatas":
-                    return { color: "#4B9B37", fillColor: "#4B9B37", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#4B9B37", fillColor: "#4B9B37", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Hutan Rakyat":
-                    return { color: "#9BC89B", fillColor: "#9BC89B", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#9BC89B", fillColor: "#9BC89B", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Industri":
-                    return { color: "#690000", fillColor: "#690000", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#690000", fillColor: "#690000", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Pariwisata":
-                    return { color: "#FFA5FF", fillColor: "#FFA5FF", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#FFA5FF", fillColor: "#FFA5FF", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Perkebunan":
-                    return { color: "#AFAF37", fillColor: "#AFAF37", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#AFAF37", fillColor: "#AFAF37", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Permukiman Perdesaan":
-                    return { color: "#F59B1E", fillColor: "#F59B1E", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#F59B1E", fillColor: "#F59B1E", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Pertanian Lahan Basah":
-                    return { color: "#C8F546", fillColor: "#C8F546", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#C8F546", fillColor: "#C8F546", opacity: 0, fillOpacity: self.opacity };
                   case "Ruang Terbuka Hijau":
-                    return { color: "#D2BEFF", fillColor: "#D2BEFF", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#D2BEFF", fillColor: "#D2BEFF", opacity: 0, fillOpacity: self.opacity };
                   case "Sungai":
-                    return { color: "#97DBF2", fillColor: "#97DBF2", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#97DBF2", fillColor: "#97DBF2", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Hutan Produksi Tetap":
-                    return { color: "#7db437", fillColor: "#7db437", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#7db437", fillColor: "#7db437", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Rawan Bencana Gunung Api I":
-                    return { color: "#EC0000", fillColor: "#EC0000", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#EC0000", fillColor: "#EC0000", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Rawan Bencana Gunung Api II":
-                    return { color: "#F69331", fillColor: "#F69331", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#F69331", fillColor: "#F69331", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Rawan Bencana Gunung Api III":
-                    return { color: "#EFDD2E", fillColor: "#EFDD2E", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#EFDD2E", fillColor: "#EFDD2E", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Rawan Gerakan Tanah Menengah":
-                    return { color: "#fc8d59", fillColor: "#fc8d59", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#fc8d59", fillColor: "#fc8d59", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Rawan Gerakan Tanah Tinggi":
-                    return { color: "#d7301f", fillColor: "#d7301f", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#d7301f", fillColor: "#d7301f", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Taman Buru":
-                    return { color: "#4696ff", fillColor: "#4696ff", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#4696ff", fillColor: "#4696ff", opacity: 0, fillOpacity: self.opacity };
                   case "Kaw. Taman Wisata Alam dan Taman Wisata Laut":
-                    return { color: "#e6d2ff", fillColor: "#e6d2ff", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#e6d2ff", fillColor: "#e6d2ff", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Hutan Lindung":
-                    return { color: "#325f28", fillColor: "#325f28", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#325f28", fillColor: "#325f28", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Permukiman Perkotaan":
-                    return { color: "#f59b1e", fillColor: "#f59b1e", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#f59b1e", fillColor: "#f59b1e", opacity: 0, fillOpacity: self.opacity };
                   case "Kawasan Pertanian Lahan Kering":
-                    return { color: "#807c29", fillColor: "#807c29", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#807c29", fillColor: "#807c29", opacity: 0, fillOpacity: self.opacity };
                   case "Sempadan Pantai":
-                    return { color: "#429E09", fillColor: "#429E09", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#429E09", fillColor: "#429E09", opacity: 0, fillOpacity: self.opacity };
                   case "Sempadan Sungai":
-                    return { color: "#41251D", fillColor: "#41251D", opacity: 0, fillOpacity: 0.6 };
+                    return { color: "#41251D", fillColor: "#41251D", opacity: 0, fillOpacity: self.opacity };
                 }
               },
               onEachFeature: function (feature, layer) {

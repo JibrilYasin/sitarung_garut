@@ -8,12 +8,13 @@
             <span class="text-muted"><small class="font-weight-bold">Total {{ getDataStatistikPermohonan['totalpermohonan'] }} Lokasi</small> , <small>Periode : {{ $filters.formatDateOnly(startdateDashbaord) }} s/d {{ $filters.formatDateOnly(enddateDashbaord) }}</small></span>
           </div>
           <div class="btn-group">
-            <select id="kecamatanDashbaordColumn" data-live-search="true" data-size="8" class="form-control" title="Kecamatan" @change="this.boundMap = true;loadDesa();loadMap()">
-              <option v-for="value in getDataKecamatan" :key="value['id']" :value="value['nama_kecamatan']">{{ value['nama_kecamatan'] }}</option>
-            </select>
-            <select id="desaDashbaordColumn" data-live-search="true" data-size="8" class="form-control ms-2" title="Desa" @change="this.boundMap = true;loadMap()">
-              <option v-for="value in getDesa" :key="value['id']" :value="value['DESA']">{{ value['DESA'] }}</option>
-            </select>
+            <button type="button" class="btn bg-gradient-info btn-sm" @click="showFilterModal()">Filter Tanggal</button>
+            <router-link
+              :to='`/admin`'
+              @click.native="$router.go()"
+              class="btn bg-gradient-success btn-sm">
+              Refresh
+            </router-link>
           </div>
         </div>
         <div class="card-body p-3">
@@ -24,20 +25,19 @@
     <div class="col-lg-4">
       <div class="card mb-3">
         <div class="card-header pb-0 p-3">
-          <h6 class="mb-0">Filter</h6>
+          <h6 class="mb-0">Filter Wilayah</h6>
         </div>
         <div class="card-body p-3">
           <div class="row">
             <div class="col-md-6">
-              <button type="button" class="btn btn-block bg-gradient-info w-100" @click="showFilterModal()">Filter Tanggal</button>
+              <select id="kecamatanDashbaordColumn" data-live-search="true" data-size="8" class="form-control" title="Kecamatan" @change="this.boundMap = true;loadDesa();loadMap()">
+                <option v-for="value in getDataKecamatan" :key="value['id']" :value="value['nama_kecamatan']">{{ value['nama_kecamatan'] }}</option>
+              </select>
             </div>
             <div class="col-md-6">
-              <router-link
-                :to='`/admin`'
-                @click.native="$router.go()"
-                class="btn btn-block bg-gradient-success w-100">
-                Refresh Halaman
-              </router-link>
+              <select id="desaDashbaordColumn" data-live-search="true" data-size="8" class="form-control" title="Desa" @change="this.boundMap = true;loadMap()">
+                <option v-for="value in getDesa" :key="value['id']" :value="value['DESA']">{{ value['DESA'] }}</option>
+              </select>
             </div>
           </div>
         </div>
@@ -61,40 +61,6 @@
               </div>
             </li>
           </ul>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header pb-0 p-3">
-          <h6 class="mb-0">Permohonan Terbaru</h6>
-        </div>
-        <div class="card-body p-3">
-          <div class="table-responsive">
-            <table class="table align-items-center">
-              <tbody>
-                <tr v-for="value in getDataStatistikPermohonan['latestpermohonan']" :key="value['id']">
-                  <td class="align-middle text-sm">
-                    <div class="col">
-                      <p class="text-xs font-weight-bold mb-0">Kode Permohonan:</p>
-                      <h6 class="text-xs mb-0">{{ value['invoice'] }}</h6>
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <p class="text-xs font-weight-bold mb-0">Nama Pemohon:</p>
-                      <h6 class="text-xs mb-0">{{ value['name'] }}</h6>
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <p class="text-xs font-weight-bold mb-0">Tanggal Permohonan:</p>
-                      <h6 class="text-xs mb-0">{{ $filters.formatDate(value['created_at']) }}</h6>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
 
@@ -127,6 +93,40 @@
                       <span v-if="value['status'] == 'Approve'" class="badge badge-pill badge-md w-100 bg-gradient-success" style="font-size:.6rem">Disetujui</span>
                       <span v-if="value['status'] == 'Blokir'" class="badge badge-pill badge-md w-100 bg-gradient-warning" style="font-size:.6rem">Diblokir</span>
                       <span v-if="value['status'] == 'Reject'" class="badge badge-pill badge-md w-100 bg-gradient-danger" style="font-size:.6rem">Direject</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header pb-0 p-3">
+          <h6 class="mb-0">Permohonan Terbaru</h6>
+        </div>
+        <div class="card-body p-3">
+          <div class="table-responsive">
+            <table class="table align-items-center">
+              <tbody>
+                <tr v-for="value in getDataStatistikPermohonan['latestpermohonan']" :key="value['id']">
+                  <td class="align-middle text-sm">
+                    <div class="col">
+                      <p class="text-xs font-weight-bold mb-0">No Permohonan:</p>
+                      <h6 class="text-xs mb-0">{{ value['invoice'] }}</h6>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <p class="text-xs font-weight-bold mb-0">Nama Pemohon:</p>
+                      <h6 class="text-xs mb-0">{{ value['name'] }}</h6>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <p class="text-xs font-weight-bold mb-0">Tanggal Permohonan:</p>
+                      <h6 class="text-xs mb-0">{{ $filters.formatDate(value['created_at']) }}</h6>
                     </div>
                   </td>
                 </tr>

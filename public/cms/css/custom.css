@@ -71,3 +71,9 @@ p, .p {
     transform: rotate(360deg);
   }
 }
+.form-control {
+  font-size: 0.7rem;
+}
+.form-select {
+  font-size: 0.7rem;
+}

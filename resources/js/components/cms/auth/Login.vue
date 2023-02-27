@@ -8,7 +8,7 @@
               <img :src="imagepath+'/'+setCompany.company_logo" width="150" />
             </div>
           </div>
-          <h4 class="font-weight-bolder">Form Login CMSX</h4>
+          <h4 class="font-weight-bolder">Form Login CMS</h4>
           <p class="mb-0">Silahkan masukan alamat email & password.</p>
         </div>
         <div class="card-body">

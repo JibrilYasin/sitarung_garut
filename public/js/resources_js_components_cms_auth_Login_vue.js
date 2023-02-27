@@ -123,7 +123,7 @@ var _hoisted_6 = {
 var _hoisted_7 = ["src"];
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
   "class": "font-weight-bolder"
-}, "Form Login CMSX", -1 /* HOISTED */);
+}, "Form Login CMS", -1 /* HOISTED */);
 var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
   "class": "mb-0"
 }, "Silahkan masukan alamat email & password.", -1 /* HOISTED */);

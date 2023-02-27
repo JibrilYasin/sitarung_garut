@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/status','Permohonan\PermohonanController@postStatus');
     Route::post('/destroy','Permohonan\PermohonanController@postDestroy');
     Route::get('/show/{id?}','Permohonan\PermohonanController@show');
+    Route::get('/impact/{id?}','Permohonan\PermohonanController@polImpact');
   });
   // End
 

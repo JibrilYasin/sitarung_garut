@@ -364,6 +364,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.map.remove();
       }
       this.loadStatusPermohonan();
+      this.loadImpact();
       this.loadMap();
     },
     loadStatusPermohonan: function loadStatusPermohonan() {
@@ -401,73 +402,61 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    loadMap: function loadMap() {
+    loadImpact: function loadImpact() {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var action, obj;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 _this2.$isLoading(true);
+                window.axios.defaults.headers.common["Authorization"] = "Bearer ".concat(_this2.$store.state.setTokenCMS);
+                alert(baseurl + "/api/permohonan/impact/" + _this2.getDetailList.id);
+                _context2.next = 5;
+                return axios.get(baseurl + "/api/permohonan/impact/" + _this2.getDetailList.id, {
+                  headers: {
+                    Accept: "application/json"
+                  }
+                }).then(function (response) {
+                  console.log(JSON.stringify(response.data));
+                  _this2.$isLoading(false);
+                })["catch"](function (error) {
+                  _this2.$isLoading(false);
+                  //this.$store.dispatch("removeDispatchCMS", { self: this });
+                });
+              case 5:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    loadMap: function loadMap() {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var action, obj;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this3.$isLoading(true);
                 action = baseurl + "/api/map";
                 obj = new Object();
-                obj.kecamatan = _this2.getDetailList.kecamatan;
-                obj.desa = _this2.getDetailList.desa;
-                _context2.next = 7;
+                obj.kecamatan = _this3.getDetailList.kecamatan;
+                obj.desa = _this3.getDetailList.desa;
+                _context3.next = 7;
                 return axios.post(action, obj, {
                   headers: {
                     Accept: "application/json"
                   }
                 }).then(function (response) {
-                  var self = _this2;
-                  var opacCtrl = {
-                    map: {
-                      center: _this2.center,
-                      zoom: 10
-                    },
-                    otmLayer: {
-                      url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-                      options: {
-                        attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-                        maxZoom: 17
-                      }
-                    },
-                    satelliteLayer: {
-                      url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-                      options: {
-                        attribution: '&copy; <a href="http://www.esri.com/">Esri</a>',
-                        maxZoom: 18
-                      }
-                    },
-                    opacityBaseControl: {
-                      options: {
-                        sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider3d7.png",
-                        backgroundColor: "rgba(0, 0, 0, 0.9)",
-                        opacity: 1,
-                        position: 'topright'
-                      }
-                    },
-                    opacityOverlayControl: {
-                      options: {
-                        sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider2.png",
-                        backgroundColor: "rgba(229, 227, 223, 0.9)",
-                        opacity: 0.75,
-                        position: 'topright'
-                      }
-                    }
-                  };
-                  _this2.map = new L.Map("detailMap", opacCtrl.map);
-                  var layer = new L.TileLayer(opacCtrl.otmLayer.url, opacCtrl.otmLayer.options);
-                  var overlay = new L.TileLayer(opacCtrl.satelliteLayer.url, opacCtrl.satelliteLayer.options);
-                  var controlBaseOpacity = new L.Control.OpacitySlider(null, opacCtrl.opacityBaseControl.options);
-                  var controlOverlayOpacity = new L.Control.OpacitySlider(overlay, opacCtrl.opacityOverlayControl.options);
-                  //controlBaseOpacity.addTo(this.map);
-                  controlOverlayOpacity.addTo(_this2.map);
-                  layer.addTo(_this2.map);
-
-                  //this.map.setView(this.center, 10);
-
+                  var self = _this3;
+                  _this3.map = new L.Map("detailMap", {
+                    layers: [_this3.googleHybrid],
+                    center: _this3.center
+                  });
+                  _this3.map.setView(_this3.center, 10);
                   var myStyle = {
                     color: "#FFF",
                     fillColor: "#FFF",
@@ -479,26 +468,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     style: function style(feature) {
                       return myStyle;
                     }
-                  }).addTo(_this2.map);
-                  _this2.loadPolygon();
+                  }).addTo(_this3.map);
                   setTimeout(function () {
-                    _this2.loadPolaRuang(_this2.getDetailList.kecamatan, _this2.getDetailList.desa);
+                    _this3.loadPolaRuang(_this3.getDetailList.kecamatan, _this3.getDetailList.desa);
                   }, 100);
-                  _this2.$isLoading(false);
+                  setTimeout(function () {
+                    _this3.loadPolygon();
+                  }, 200);
+                  _this3.$isLoading(false);
                 })["catch"](function (error) {
                   //this.$store.dispatch("removeDispatchCMS", { self: this });
-                  _this2.$isLoading(false);
+                  _this3.$isLoading(false);
                 });
               case 7:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }))();
     },
     loadPolygon: function loadPolygon() {
-      var _this3 = this;
+      var _this4 = this;
       this.$isLoading(true);
       var action = baseurl + "/api/permohonan/polygon";
       var obj = new Object();
@@ -509,7 +500,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           Accept: "application/json"
         }
       }).then(function (response) {
-        var self = _this3;
+        var self = _this4;
         var jsonData = L.geoJSON(response.data, {
           style: function style(feature) {
             return {
@@ -520,18 +511,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               fillOpacity: 1
             };
           }
-        }).addTo(_this3.map);
+        }).addTo(_this4.map);
         setTimeout(function () {
-          _this3.map.fitBounds(jsonData.getBounds());
+          _this4.map.fitBounds(jsonData.getBounds());
+          jsonData.bringToFront();
         }, 100);
-        _this3.$isLoading(false);
+        _this4.$isLoading(false);
       })["catch"](function (error) {
-        _this3.$isLoading(false);
+        _this4.$isLoading(false);
         //this.$store.dispatch("removeDispatchCMS", { self: this });
       });
     },
     loadPolaRuang: function loadPolaRuang(namakecamatan, desa) {
-      var _this4 = this;
+      var _this5 = this;
       this.$isLoading(true);
       var action = baseurl + "/api/polaruang";
       var obj = new Object();
@@ -543,7 +535,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           Accept: "application/json"
         }
       }).then(function (response) {
-        var self = _this4;
+        var self = _this5;
         var jsonData = L.geoJSON(response.data, {
           style: function style(feature) {
             switch (feature.properties.keterangan) {
@@ -766,17 +758,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             //   className: "labelstyle",
             // });
           }
-        }).addTo(_this4.map);
-        _this4.$isLoading(false);
+        }).addTo(_this5.map);
+        _this5.$isLoading(false);
       })["catch"](function (error) {
-        _this4.$store.dispatch("removeDispatchCMS", {
-          self: _this4
+        _this5.$store.dispatch("removeDispatchCMS", {
+          self: _this5
         });
-        _this4.$isLoading(false);
+        _this5.$isLoading(false);
       });
     },
     submitForm: function submitForm(e) {
-      var _this5 = this;
+      var _this6 = this;
       this.$isLoading(true);
       this.formErrors = {};
       var form = e.target || e.srcElement;
@@ -791,18 +783,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }).then(function (response) {
         var resp = response.data;
-        _this5.toast(resp.message, {
+        _this6.toast(resp.message, {
           type: resp.status,
           timeout: 3000
         });
         if (resp.status == "success") {
           $("#updateStatusPermohonanModal").modal('hide');
-          _this5.$parent.loadList();
+          _this6.$parent.loadList();
         }
-        _this5.$isLoading(false);
+        _this6.$isLoading(false);
       })["catch"](function (error) {
-        _this5.formErrors = error.response.data.errors;
-        _this5.$isLoading(false);
+        _this6.formErrors = error.response.data.errors;
+        _this6.$isLoading(false);
       });
     }
   }
@@ -1265,7 +1257,7 @@ var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 }, "Foto Sertifikat", -1 /* HOISTED */);
 var _hoisted_51 = ["href"];
 var _hoisted_52 = {
-  "class": "card"
+  "class": "card mb-3"
 };
 var _hoisted_53 = {
   "class": "card-body"

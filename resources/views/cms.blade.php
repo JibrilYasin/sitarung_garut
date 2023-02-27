@@ -38,7 +38,6 @@
   <link rel="stylesheet" href="{{ asset('/css/bootstrap-select.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('/css/bootstrap-datepicker.min.css') }}" />
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-pegman@0.0.8/leaflet-pegman.css" />
   <link rel="stylesheet" href="{{ asset('/cms/css/custom.css') }}" />
 
 </head>
@@ -56,9 +55,6 @@
   <script src="{{ asset('/cms/js/plugins/smooth-scrollbar.min.js') }}"></script>
   <script src="{{ asset('/cms/js/plugins/chartjs.min.js') }}"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
-  <script src="https://unpkg.com/leaflet-pegman@0.0.8/leaflet-pegman.js"></script>
-  <script src="https://unpkg.com/leaflet-kmz@0.0.6/libs/KMZParser.js"></script>
-  <script src="https://unpkg.com/leaflet-kmz@0.0.6/libs/GridLayer.GeoJSON.js"></script>
   <script src="https://unpkg.com/leaflet-transparency@latest/leaflet-transparency.js"></script>
   <script src="{{ asset('/js/app.js'.'?'.time()) }}"></script>
   <script src="{{ asset('/js/featherlight.min.js') }}"></script>

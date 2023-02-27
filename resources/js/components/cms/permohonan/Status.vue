@@ -78,7 +78,7 @@
                   </div>
                 </div>
 
-                <div class="card">
+                <div class="card mb-3">
                   <div class="card-body">
                     <label class="form-label text-uppercase">Koordinat</label>
                     <table class="table">
@@ -192,6 +192,7 @@
           this.map.remove();
         }
         this.loadStatusPermohonan();
+        this.loadImpact();
         this.loadMap();
       },
       async loadStatusPermohonan() {
@@ -215,6 +216,25 @@
             this.$store.dispatch("removeDispatchCMS", { self: this });
           });
       },
+      async loadImpact() {
+        this.$isLoading(true);
+        window.axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.state.setTokenCMS}`;
+        alert(baseurl + "/api/permohonan/impact/"+this.getDetailList.id)
+        await axios
+          .get(baseurl + "/api/permohonan/impact/"+this.getDetailList.id, {
+            headers: {
+              Accept: "application/json",
+            },
+          })
+          .then((response) => {
+            console.log(JSON.stringify(response.data));
+            this.$isLoading(false);
+          })
+          .catch((error) => {
+            this.$isLoading(false);
+            //this.$store.dispatch("removeDispatchCMS", { self: this });
+          });
+      },
       async loadMap() {
         this.$isLoading(true);
 
@@ -231,53 +251,11 @@
           .then((response) => {
             let self = this;
 
-            var opacCtrl = {
-              map: {
-                center: this.center,
-                zoom:10
-              },
-              otmLayer: {
-                url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-                options: {
-                  attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-                  maxZoom: 17,
-                },
-              },
-              satelliteLayer: {
-                url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-                options: {
-                  attribution: '&copy; <a href="http://www.esri.com/">Esri</a>',
-                  maxZoom: 18,
-                },
-              },
-              opacityBaseControl: {
-                options: {
-                  sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider3d7.png",
-                  backgroundColor: "rgba(0, 0, 0, 0.9)",
-                  opacity: 1,
-                  position: 'topright',
-                }
-              },
-              opacityOverlayControl: {
-                options: {
-                  sliderImageUrl: "https://unpkg.com/leaflet-transparency@0.0.2/images/opacity-slider2.png",
-                  backgroundColor: "rgba(229, 227, 223, 0.9)",
-                  opacity: 0.75,
-                  position: 'topright',
-                }
-              },
-            };
-            this.map = new L.Map("detailMap", opacCtrl.map);
-            var layer = new L.TileLayer(opacCtrl.otmLayer.url, opacCtrl.otmLayer.options);
-            var overlay = new L.TileLayer(opacCtrl.satelliteLayer.url, opacCtrl.satelliteLayer.options);
-
-            var controlBaseOpacity = new L.Control.OpacitySlider(null, opacCtrl.opacityBaseControl.options);
-            var controlOverlayOpacity = new L.Control.OpacitySlider(overlay, opacCtrl.opacityOverlayControl.options);
-            //controlBaseOpacity.addTo(this.map);
-            controlOverlayOpacity.addTo(this.map);
-            layer.addTo(this.map);
-
-            //this.map.setView(this.center, 10);
+            this.map = new L.Map("detailMap", {
+              layers: [this.googleHybrid],
+              center: this.center,
+            });
+            this.map.setView(this.center, 10);
 
             var myStyle = {
               color: "#FFF",
@@ -292,10 +270,13 @@
               },
             }).addTo(this.map);
 
-            this.loadPolygon();
+
             setTimeout(() => {
               this.loadPolaRuang(this.getDetailList.kecamatan,this.getDetailList.desa);
             }, 100);
+            setTimeout(() => {
+              this.loadPolygon();
+            }, 200);
             this.$isLoading(false);
           })
           .catch((error) => {
@@ -324,6 +305,7 @@
             }).addTo(this.map);
             setTimeout(() => {
               this.map.fitBounds(jsonData.getBounds());
+              jsonData.bringToFront();
             }, 100);
             this.$isLoading(false);
           })

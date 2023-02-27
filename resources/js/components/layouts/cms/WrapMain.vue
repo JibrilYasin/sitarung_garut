@@ -7,7 +7,7 @@
       <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
   </div>
-  <div class="min-height-300 bg-primary position-absolute w-100"></div>
+  <div class="min-height-500 position-absolute w-100" style="background:linear-gradient(310deg, #5e72e4 0%, #825ee4 100%)"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>

@@ -43,7 +43,7 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
-  public function registerData($request)
+  public static function registerData($request)
   {
     try {
       DB::transaction(function () use ($request) {
@@ -152,7 +152,7 @@ class User extends Authenticatable
     }
     return true;
   }
-  public function activationData($request)
+  public static function activationData($request)
   {
     try {
       DB::transaction(function () use ($request) {
@@ -164,7 +164,7 @@ class User extends Authenticatable
     }
     return true;
   }
-  public function forgotData($user)
+  public static function forgotData($user)
   {
     try {
       DB::transaction(function () use ($user) {
@@ -206,7 +206,7 @@ class User extends Authenticatable
     }
     return true;
   }
-  public function resetData($request)
+  public static function resetData($request)
   {
     try {
       DB::transaction(function () use ($request) {
@@ -335,7 +335,7 @@ class User extends Authenticatable
     }
     return true;
   }
-  public function approveData($request)
+  public static function approveData($request)
   {
     try {
       DB::transaction(function () use ($request) {
@@ -368,7 +368,7 @@ class User extends Authenticatable
     }
     return true;
   }
-  public function rejectData($request)
+  public static function rejectData($request)
   {
     try {
       DB::transaction(function () use ($request) {
@@ -402,7 +402,7 @@ class User extends Authenticatable
     }
     return true;
   }
-  public function updateDeviceID($request)
+  public static function updateDeviceID($request)
   {
     try {
       DB::transaction(function () use ($request) {

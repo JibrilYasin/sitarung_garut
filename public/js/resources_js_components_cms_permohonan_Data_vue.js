@@ -292,6 +292,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       getDetailList: {},
       getLatlng: {},
       getNextStatus: {},
+      getImpactPolaRuang: {},
       lokasi: '',
       sertifikat: '',
       formErrors: {},
@@ -364,11 +365,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       $("#updateStatusPermohonanModal").modal('show');
       $("#updateStatusPermohonanForm")[0].reset();
       $("#statusPermohonanInput").val(this.getDetailList.status_permohonan_id);
-      if (this.map) {
-        this.map.remove();
-      }
       $("#checkPolaRuang").prop("checked", true);
       $("#checkLSD").prop("checked", true);
+      this.map = null;
       this.loadStatusPermohonan();
       //this.loadImpact();
       this.loadMap();
@@ -425,10 +424,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }).then(function (response) {
                   _this2.getImpactPolaRuang = response.data.polaruang;
-                  console.log(JSON.stringify(response.data.polaruang));
                   _this2.$isLoading(false);
                 })["catch"](function (error) {
-                  alert(error);
                   _this2.$isLoading(false);
                   //this.$store.dispatch("removeDispatchCMS", { self: this });
                 });
@@ -1174,7 +1171,8 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   "class": "modal fade",
-  id: "updateStatusPermohonanModal"
+  id: "updateStatusPermohonanModal",
+  "data-bs-backdrop": "static"
 };
 var _hoisted_2 = {
   "class": "modal-dialog modal-xl"
@@ -1386,11 +1384,10 @@ var _hoisted_69 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 var _hoisted_70 = {
   "class": "table"
 };
-var _hoisted_71 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+var _hoisted_71 = {
   "class": "text-xs"
-}, "Yes", -1 /* HOISTED */);
-var _hoisted_72 = [_hoisted_71];
-var _hoisted_73 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+};
+var _hoisted_72 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "card mb-0"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "card-body"
@@ -1402,23 +1399,21 @@ var _hoisted_73 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "form-control",
   readonly: ""
 })])], -1 /* HOISTED */);
-var _hoisted_74 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_73 = {
   "class": "modal-footer"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+};
+var _hoisted_74 = {
   "class": "btn-group"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+};
+var _hoisted_75 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   type: "submit",
   "class": "btn bg-gradient-primary"
-}, "Ubah Status"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  type: "button",
-  "class": "btn bg-gradient-secondary",
-  "data-bs-dismiss": "modal"
-}, "Close")])], -1 /* HOISTED */);
+}, "Ubah Status", -1 /* HOISTED */);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", _hoisted_5, "Detail Permohonan : " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.getDetailList['invoice']), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     id: "updateStatusPermohonanForm",
-    onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+    onSubmit: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $options.submitForm && $options.submitForm.apply($options, arguments);
     }, ["prevent"])),
     action: "javascript:void(0)",
@@ -1506,9 +1501,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }])
   }, null, 4 /* STYLE */)], 8 /* PROPS */, _hoisted_60)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_61, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_62, [_hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_64, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.getLatlng, function (value) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[0]), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value.split(',')[1]), 1 /* TEXT */)]);
-  }), 256 /* UNKEYED_FRAGMENT */))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_67, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_68, [_hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_70, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.getLatlng, function (value) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, _hoisted_72);
-  }), 256 /* UNKEYED_FRAGMENT */))])])])]), _hoisted_73])])]), _hoisted_74], 32 /* HYDRATE_EVENTS */)])])]);
+  }), 256 /* UNKEYED_FRAGMENT */))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_67, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_68, [_hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_70, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.getImpactPolaRuang, function (value) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(value['keterangan']), 1 /* TEXT */)]);
+  }), 256 /* UNKEYED_FRAGMENT */))])])])]), _hoisted_72])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_74, [_hoisted_75, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn bg-gradient-secondary",
+    "data-bs-dismiss": "modal",
+    onClick: _cache[2] || (_cache[2] = function ($event) {
+      return $data.map.remove();
+    })
+  }, "Close")])])], 32 /* HYDRATE_EVENTS */)])])]);
 }
 
 /***/ }),

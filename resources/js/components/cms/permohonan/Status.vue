@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="updateStatusPermohonanModal">
+  <div class="modal fade" id="updateStatusPermohonanModal" data-bs-backdrop="static">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -139,7 +139,7 @@
           <div class="modal-footer">
             <div class="btn-group">
               <button type="submit" class="btn bg-gradient-primary">Ubah Status</button>
-              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal" @click="map.remove()">Close</button>
             </div>
           </div>
         </form>
@@ -227,11 +227,9 @@
         $("#updateStatusPermohonanModal").modal('show')
         $("#updateStatusPermohonanForm")[0].reset()
         $("#statusPermohonanInput").val(this.getDetailList.status_permohonan_id)
-        if (this.map) {
-          this.map.remove();
-        }
         $( "#checkPolaRuang" ).prop( "checked", true )
         $( "#checkLSD" ).prop( "checked", true )
+        this.map = null
         this.loadStatusPermohonan();
         //this.loadImpact();
         this.loadMap();
@@ -272,7 +270,6 @@
             this.$isLoading(false);
           })
           .catch((error) => {
-            alert(error)
             this.$isLoading(false);
             //this.$store.dispatch("removeDispatchCMS", { self: this });
           });

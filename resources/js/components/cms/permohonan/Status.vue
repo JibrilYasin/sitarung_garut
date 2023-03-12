@@ -155,7 +155,7 @@
       return{
         getDetailList:{},
         getLatlng:{},
-        getNextStatus
+        getNextStatus:{},
         getImpactPolaRuang:{},
         lokasi:'',
         sertifikat:'',

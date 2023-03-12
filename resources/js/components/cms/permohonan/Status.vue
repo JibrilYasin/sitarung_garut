@@ -118,8 +118,8 @@
                     <label class="form-label text-uppercase">Kawasan Terlintasi</label>
                     <table class="table">
                       <tbody>
-                        <tr v-for="value in getLatlng">
-                          <td class="text-xs">Yes</td>
+                        <tr v-for="value in getImpactPolaRuang">
+                          <td class="text-xs">{{ value['keterangan'] }}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -156,6 +156,7 @@
         getDetailList:{},
         getLatlng:{},
         getNextStatus:{},
+        getImpactPolaRuang:{},
         lokasi:'',
         sertifikat:'',
         formErrors: {},
@@ -267,8 +268,7 @@
             },
           })
           .then((response) => {
-            this.getImpactPolaRuang = response.data.polaruang
-            console.log(JSON.stringify(response.data.polaruang));
+            this.getImpactPolaRuang = response.data.polaruang;
             this.$isLoading(false);
           })
           .catch((error) => {

@@ -282,7 +282,7 @@ class PermohonanController extends Controller
     $where = "ST_Intersects((ST_GeomFromText('".$polygon."')), ogc_geom)";
     // $where .= "AND KECAMATAN = '" . $kecamatan . "'";
     // $where .= "AND DESA = '" . $desa . "'";
-    $polaruang = \DB::select("SELECT KELAS_III,luas FROM pola_ruang as pl WHERE {$where} GROUP BY KELAS_III");
+    $polaruang = \DB::select("SELECT KELAS_III,luas FROM pola_ruang as pl WHERE {$where}");
     $valuepolaruang = [];
     foreach ($polaruang as $key => $v) {
       $kupz = \App\Models\KUPZ::where('nama_obj',$v->KELAS_III)->first();

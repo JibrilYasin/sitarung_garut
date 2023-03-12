@@ -156,7 +156,6 @@
         getDetailList:{},
         getLatlng:{},
         getNextStatus:{},
-        getImpactPolaRuang:{},
         lokasi:'',
         sertifikat:'',
         formErrors: {},

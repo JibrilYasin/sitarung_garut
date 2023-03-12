@@ -292,7 +292,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       getDetailList: {},
       getLatlng: {},
       getNextStatus: {},
-      getImpactPolaRuang: {},
       lokasi: '',
       sertifikat: '',
       formErrors: {},

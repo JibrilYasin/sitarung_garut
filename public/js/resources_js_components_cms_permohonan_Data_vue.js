@@ -429,6 +429,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log(JSON.stringify(response.data.polaruang));
                   _this2.$isLoading(false);
                 })["catch"](function (error) {
+                  alert(error);
                   _this2.$isLoading(false);
                   //this.$store.dispatch("removeDispatchCMS", { self: this });
                 });

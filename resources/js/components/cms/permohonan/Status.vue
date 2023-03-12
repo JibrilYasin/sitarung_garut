@@ -273,6 +273,7 @@
             this.$isLoading(false);
           })
           .catch((error) => {
+            alert(error)
             this.$isLoading(false);
             //this.$store.dispatch("removeDispatchCMS", { self: this });
           });

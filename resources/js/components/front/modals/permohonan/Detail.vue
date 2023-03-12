@@ -92,7 +92,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card">
+              <div class="card mb-3">
                 <div class="card-body">
                   <label class="form-label">Koordinat</label>
                   <table class="table">
@@ -100,6 +100,18 @@
                       <tr v-for="value in getLatlng">
                         <td>{{ value.split(',')[0] }}</td>
                         <td>{{ value.split(',')[1] }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <label class="form-label text-uppercase">Kawasan Terlintasi</label>
+                  <table class="table">
+                    <tbody>
+                      <tr v-for="value in getImpactPolaRuang">
+                        <td class="text-xs">{{ value['keterangan'] }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -123,6 +135,7 @@
         showCheck:true,
         detailMapPermohonan: null,
         getLatlng:{},
+        getImpactPolaRuang:{},
         osm:L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
             attribution: '© OpenStreetMap'
@@ -154,6 +167,7 @@
     methods:{
       showModal(data){
         this.getData = data;
+        this.getImpactPolaRuang = {};
         this.getLatlng = JSON.parse(data['coordinates'])
         if(data.fotolokasi){
           this.lokasi = imagepath+'/'+data.fotolokasi
@@ -170,6 +184,7 @@
         $( "#checkLSDDetail" ).prop( "checked", false )
         this.detailMapPermohonan = null
         this.loadMapSelected()
+        this.loadImpact();
       },
       loadMapSelected() {
         this.$isLoading(true);
@@ -397,6 +412,24 @@
           .catch((error) => {
             this.$isLoading(false);
             this.$store.dispatch("removeDispatch", { self: this });
+          });
+      },
+      async loadImpact() {
+        this.$isLoading(true);
+        window.axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.state.setTokenCMS}`;
+        await axios
+          .get(baseurl + "/api/permohonan/impact/"+this.getDetailList.id, {
+            headers: {
+              Accept: "application/json",
+            },
+          })
+          .then((response) => {
+            this.getImpactPolaRuang = response.data.polaruang;
+            this.$isLoading(false);
+          })
+          .catch((error) => {
+            this.$isLoading(false);
+            //this.$store.dispatch("removeDispatchCMS", { self: this });
           });
       },
     }

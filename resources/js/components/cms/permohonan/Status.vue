@@ -155,7 +155,8 @@
       return{
         getDetailList:{},
         getLatlng:{},
-        getNextStatus:{},
+        getNextStatus
+        getImpactPolaRuang:{},
         lokasi:'',
         sertifikat:'',
         formErrors: {},
@@ -210,6 +211,7 @@
     methods:{
       showModal(data){
         this.getDetailList = data
+        this.getImpactPolaRuang = {};
         this.getLatlng = JSON.parse(data['coordinates'])
         if(data.fotolokasi){
           this.lokasi = imagepath+'/'+data.fotolokasi
@@ -266,7 +268,8 @@
             },
           })
           .then((response) => {
-            console.log(JSON.stringify(response.data));
+            this.getImpactPolaRuang = response.data.polaruang
+            console.log(JSON.stringify(response.data.polaruang));
             this.$isLoading(false);
           })
           .catch((error) => {

@@ -12,14 +12,35 @@
                 <div style="height: 100%;" id="detailMap"></div>
               </div>
               <div class="col-md-4">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <div class="mt-2">
+                      <div class="float-start me-3">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="checkPolaRuang" ref="checkPolaRuang" style="vertical-align: middle" @change="loadMap()">
+                          <label class="form-check-label" for="checkPolaRuang">Tampilkan Pola Ruang</label>
+                        </div>
+                      </div>
+                      <div class="float-start">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="checkLSD" ref="checkLSD" style="vertical-align: middle" @change="loadMap()">
+                          <label class="form-check-label" for="checkLSD">Tampilkan LSD</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="clear:both"></div>
+                  </div>
+                </div>
                 <div class="card mb-3">
                   <div class="card-body">
                     <div class="mb-3">
                       <label class="form-label fw-bold">Status Saat Ini : <span class="text-info">{{ getDetailList['status_title'] }}</span></label>
                     </div>
 
-                    <label for="customRange2" class="form-label d-none">Example range</label>
-                    <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityColor">
+                    <div class="d-none">
+                      <label for="customRange2" class="form-label d-none">Example range</label>
+                      <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityColor">
+                    </div>
 
                     <div class="mb-3">
                       <label class="form-label text-uppercase">Nama Pemohon</label>
@@ -92,6 +113,19 @@
                   </div>
                 </div>
 
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <label class="form-label text-uppercase">Kawasan Terlintasi</label>
+                    <table class="table">
+                      <tbody>
+                        <tr v-for="value in getLatlng">
+                          <td class="text-xs">Yes</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
                 <div class="card mb-0">
                   <div class="card-body">
                     <label class="form-label text-uppercase">Status Selanjutnya</label>
@@ -128,7 +162,7 @@
         email:'',
         map: null,
         zoom: 10,
-        opacity:0.1,
+        opacity:0.9,
         center: [-7.3650327, 107.5295489],
         osm:L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
@@ -163,16 +197,19 @@
       return {toast}
     },
     mounted(){
+      let self = this;
       var slider = document.getElementById("opacityColor");
       slider.oninput = function() {
-        this.opacity = slider.value
-        console.log(this.opacity);
+        self.opacity = slider.value
+        if (self.map) {
+          self.map.remove();
+        }
+        self.loadMap();
       }
     },
     methods:{
       showModal(data){
         this.getDetailList = data
-        this.opacity = 0.6
         this.getLatlng = JSON.parse(data['coordinates'])
         if(data.fotolokasi){
           this.lokasi = imagepath+'/'+data.fotolokasi
@@ -191,9 +228,12 @@
         if (this.map) {
           this.map.remove();
         }
+        $( "#checkPolaRuang" ).prop( "checked", true )
+        $( "#checkLSD" ).prop( "checked", true )
         this.loadStatusPermohonan();
-        this.loadImpact();
+        //this.loadImpact();
         this.loadMap();
+        this.loadImpact();
       },
       async loadStatusPermohonan() {
         this.$isLoading(true);
@@ -219,7 +259,6 @@
       async loadImpact() {
         this.$isLoading(true);
         window.axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.state.setTokenCMS}`;
-        alert(baseurl + "/api/permohonan/impact/"+this.getDetailList.id)
         await axios
           .get(baseurl + "/api/permohonan/impact/"+this.getDetailList.id, {
             headers: {
@@ -251,6 +290,11 @@
           .then((response) => {
             let self = this;
 
+            if (this.map) {
+              this.map.invalidateSize();
+              this.map.remove();
+            }
+
             this.map = new L.Map("detailMap", {
               layers: [this.googleHybrid],
               center: this.center,
@@ -270,13 +314,18 @@
               },
             }).addTo(this.map);
 
-
-            setTimeout(() => {
+            if($( "#checkPolaRuang" ).is(":checked")){
               this.loadPolaRuang(this.getDetailList.kecamatan,this.getDetailList.desa);
-            }, 100);
-            setTimeout(() => {
-              this.loadPolygon();
-            }, 200);
+            }
+
+            if($( "#checkLSD" ).is(":checked")){
+              this.loadLSD(this.getDetailList.kecamatan,this.getDetailList.desa);
+            }
+
+            this.loadPolygon();
+            // setTimeout(() => {
+            //
+            // }, 100);
             this.$isLoading(false);
           })
           .catch((error) => {
@@ -359,68 +408,68 @@
           })
           .then((response) => {
             let self = this;
-
+            var setopacity = this.opacity;
             var jsonData = L.geoJSON(response.data, {
               style: function (feature) {
                 switch (feature.properties.keterangan) {
                   case "Danau/Situ":
-                    return { color: "#0001EE", fillColor: "#0001EE", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#0001EE", fillColor: "#0001EE", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Rawan Bencana Banjir":
-                    return { color: "#2EA4DB", fillColor: "#2EA4DB", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#2EA4DB", fillColor: "#2EA4DB", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Cagar Alam dan Cagar Alam Laut":
-                    return { color: "#5A5AC3", fillColor: "#5A5AC3", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#5A5AC3", fillColor: "#5A5AC3", opacity: 0, fillOpacity: setopacity };
                   case "Perlindungan Geologi (Karst)":
-                    return { color: "#968796", fillColor: "#968796", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#968796", fillColor: "#968796", opacity: 0, fillOpacity: setopacity };
                   case "Hutan Mangrove":
-                    return { color: "#2D966E", fillColor: "#2D966E", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#2D966E", fillColor: "#2D966E", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Sempadan Situ":
-                    return { color: "#05D7D7", fillColor: "#05D7D7", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#05D7D7", fillColor: "#05D7D7", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Resapan Air":
-                    return { color: "#194128", fillColor: "#194128", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#194128", fillColor: "#194128", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Hutan Produksi Terbatas":
-                    return { color: "#4B9B37", fillColor: "#4B9B37", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#4B9B37", fillColor: "#4B9B37", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Hutan Rakyat":
-                    return { color: "#9BC89B", fillColor: "#9BC89B", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#9BC89B", fillColor: "#9BC89B", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Industri":
-                    return { color: "#690000", fillColor: "#690000", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#690000", fillColor: "#690000", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Pariwisata":
-                    return { color: "#FFA5FF", fillColor: "#FFA5FF", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#FFA5FF", fillColor: "#FFA5FF", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Perkebunan":
-                    return { color: "#AFAF37", fillColor: "#AFAF37", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#AFAF37", fillColor: "#AFAF37", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Permukiman Perdesaan":
-                    return { color: "#F59B1E", fillColor: "#F59B1E", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#F59B1E", fillColor: "#F59B1E", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Pertanian Lahan Basah":
-                    return { color: "#C8F546", fillColor: "#C8F546", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#C8F546", fillColor: "#C8F546", opacity: 0, fillOpacity: setopacity };
                   case "Ruang Terbuka Hijau":
-                    return { color: "#D2BEFF", fillColor: "#D2BEFF", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#D2BEFF", fillColor: "#D2BEFF", opacity: 0, fillOpacity: setopacity };
                   case "Sungai":
-                    return { color: "#97DBF2", fillColor: "#97DBF2", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#97DBF2", fillColor: "#97DBF2", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Hutan Produksi Tetap":
-                    return { color: "#7db437", fillColor: "#7db437", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#7db437", fillColor: "#7db437", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Rawan Bencana Gunung Api I":
-                    return { color: "#EC0000", fillColor: "#EC0000", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#EC0000", fillColor: "#EC0000", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Rawan Bencana Gunung Api II":
-                    return { color: "#F69331", fillColor: "#F69331", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#F69331", fillColor: "#F69331", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Rawan Bencana Gunung Api III":
-                    return { color: "#EFDD2E", fillColor: "#EFDD2E", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#EFDD2E", fillColor: "#EFDD2E", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Rawan Gerakan Tanah Menengah":
-                    return { color: "#fc8d59", fillColor: "#fc8d59", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#fc8d59", fillColor: "#fc8d59", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Rawan Gerakan Tanah Tinggi":
-                    return { color: "#d7301f", fillColor: "#d7301f", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#d7301f", fillColor: "#d7301f", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Taman Buru":
-                    return { color: "#4696ff", fillColor: "#4696ff", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#4696ff", fillColor: "#4696ff", opacity: 0, fillOpacity: setopacity };
                   case "Kaw. Taman Wisata Alam dan Taman Wisata Laut":
-                    return { color: "#e6d2ff", fillColor: "#e6d2ff", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#e6d2ff", fillColor: "#e6d2ff", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Hutan Lindung":
-                    return { color: "#325f28", fillColor: "#325f28", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#325f28", fillColor: "#325f28", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Permukiman Perkotaan":
-                    return { color: "#f59b1e", fillColor: "#f59b1e", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#f59b1e", fillColor: "#f59b1e", opacity: 0, fillOpacity: setopacity };
                   case "Kawasan Pertanian Lahan Kering":
-                    return { color: "#807c29", fillColor: "#807c29", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#807c29", fillColor: "#807c29", opacity: 0, fillOpacity: setopacity };
                   case "Sempadan Pantai":
-                    return { color: "#429E09", fillColor: "#429E09", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#429E09", fillColor: "#429E09", opacity: 0, fillOpacity: setopacity };
                   case "Sempadan Sungai":
-                    return { color: "#41251D", fillColor: "#41251D", opacity: 0, fillOpacity: self.opacity };
+                    return { color: "#41251D", fillColor: "#41251D", opacity: 0, fillOpacity: setopacity };
                 }
               },
               onEachFeature: function (feature, layer) {
@@ -429,11 +478,54 @@
                 }else{
                   layer.bindPopup('<div class="mb-2"><b class="text-uppercase text-primary">'+feature.properties.keterangan+'</b></div><p><b>'+feature.properties.kupz_title+'</b></p><div style="overflow-y: auto;height: 300px;"><ul style="padding-left:15px;line-height:25px;list-style-type:circle">'+feature.properties.kupz_description+'</ul></div>',{maxWidth:500});
                 }
-
+                layer.on({
+                  click: function(e){
+                    //layer.options.fillOpacity = 0.2
+                    // var $layer = e.target;
+                    // var highlightStyle = {
+                    //     fillOpacity: 0.3,
+                    // };
+                    // $layer.bringToFront();
+                    // $layer.setStyle(highlightStyle);
+                  }
+                })
                 // layer.bindTooltip(feature.properties.keterangan, {
                 //   direction: "center",
                 //   className: "labelstyle",
                 // });
+              },
+            }).addTo(this.map);
+            this.$isLoading(false);
+          })
+          .catch((error) => {
+            this.$store.dispatch("removeDispatchCMS", { self: this });
+            this.$isLoading(false);
+          });
+      },
+      loadLSD(namakecamatan,desa) {
+        this.$isLoading(true);
+        let action = baseurl + "/api/polalsd";
+        let obj = new Object();
+        obj.kecamatan = namakecamatan;
+        obj.desa = desa;
+        axios
+          .post(action, obj, {
+            headers: {
+              Accept: "application/json",
+            },
+          })
+          .then((response) => {
+            let self = this;
+            var setopacity = this.opacity;
+            var jsonData = L.geoJSON(response.data, {
+              style: function (feature) {
+                switch (feature.properties.keterangan) {
+                  case "Sepakat Dipertahankan":
+                    return { color: "#35a952", fillColor: "#35a952", opacity: 1, fillOpacity: 0.9 };
+                }
+              },
+              onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.keterangan);
               },
             }).addTo(this.map);
             this.$isLoading(false);

@@ -246,17 +246,10 @@
           })
           .then((response) => {
             this.getDataKecamatanNew = response.data;
-
-            if (this.nameKec != "") {
+            setTimeout(() => {
               $("#districtsInput").selectpicker("refresh");
-              setTimeout(() => {
-                $("#districtsInput").val(this.nameKec).selectpicker("refresh");
-              }, 10);
-            } else {
-              setTimeout(() => {
-                $("#districtsInput").val("").selectpicker("refresh");
-              }, 10);
-            }
+              $("#districtsInput").val(this.nameKec).selectpicker("refresh");
+            }, 10);
             setTimeout(() => {
               this.loadDesa();
             }, 1000);
@@ -299,8 +292,8 @@
         if ($("#districtsInput").val() != "") {
           this.nameKec = $("#districtsInput").val();
         }
-        $( "#checkPolaRuang" ).prop( "checked", false )
-        $( "#checkLSD" ).prop( "checked", false )
+        // $( "#checkPolaRuang" ).prop( "checked", false )
+        // $( "#checkLSD" ).prop( "checked", false )
         let action = baseurl + "/api/map";
         let obj = new Object();
         obj.kecamatan = this.nameKec;
@@ -422,6 +415,13 @@
                 this.map.fitBounds(jsonData.getBounds());
               }, 100);
             }
+
+            if($( "#checkPolaRuang" ).is(":checked")){
+              this.loadPolaRuang();
+            }
+            if($( "#checkLSD" ).is(":checked")){
+              this.loadLSD();
+            }
             // if($("#desaInput").val() != ''){
             //   setTimeout(() => {
             //     this.loadPolaRuang(this.nameKec);
@@ -430,22 +430,18 @@
             this.$isLoading(false);
           })
           .catch((error) => {
-            console.log(error);
             this.$isLoading(false);
             this.$store.dispatch("removeDispatch", { self: this });
           });
       },
       checkPolaRuang(){
-        if (this.$refs.checkPolaRuang.checked) {
-          this.loadPolaRuang();
-        } else {
-          this.loadMapSelected();
-        }
+        this.loadMapSelected();
       },
       loadPolaRuang() {
         this.$isLoading(true);
         let action = baseurl + "/api/polaruang";
         let obj = new Object();
+
         obj.kecamatan = this.nameKec;
         obj.desa = $("#desaInput").val();
         obj.type = this.$parent.typePolaRuang;
@@ -538,11 +534,12 @@
           });
       },
       checkLSD(){
-        if (this.$refs.checkLSD.checked) {
-          this.loadLSD();
-        } else {
-          this.loadMapSelected();
-        }
+        this.loadMapSelected();
+        // if (this.$refs.checkLSD.checked) {
+        //   this.loadLSD();
+        // } else {
+        //   this.loadMapSelected();
+        // }
       },
       loadLSD() {
         this.$isLoading(true);
@@ -559,12 +556,11 @@
           })
           .then((response) => {
             let self = this;
-            console.log(JSON.stringify(response.data));
             var jsonData = L.geoJSON(response.data, {
               style: function (feature) {
                 switch (feature.properties.keterangan) {
                   case "Sepakat Dipertahankan":
-                    return { color: "#5A5AC3", fillColor: "#5A5AC3", opacity: 1, fillOpacity: 0.9 };
+                    return { color: "#35a952", fillColor: "#35a952", opacity: 1, fillOpacity: 0.9 };
                 }
               },
               onEachFeature: function (feature, layer) {

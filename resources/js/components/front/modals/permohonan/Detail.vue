@@ -418,7 +418,7 @@
         this.$isLoading(true);
         window.axios.defaults.headers.common["Authorization"] = `Bearer ${this.$store.state.setTokenCMS}`;
         await axios
-          .get(baseurl + "/api/permohonan/impact/"+this.getDetailList.id, {
+          .get(baseurl + "/api/permohonan/impact/"+this.getData.id, {
             headers: {
               Accept: "application/json",
             },

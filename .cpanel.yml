@@ -1,5 +1,0 @@
----
-deployment:
-tasks:
-- export DEPLOYPATH=/home/saktiyasin/public_html/sitarung/git
-- /bin/cp -r * $DEPLOYPATH
